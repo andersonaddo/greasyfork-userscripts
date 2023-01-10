@@ -9,46 +9,60 @@
 // @description Simply hides posts from specific user-specified domains on HackerNews front page
 // @icon https://www.kindpng.com/picc/m/61-613142_see-no-evil-monkey-icon-monkey-eyes-closed.png
 // ==/UserScript==
- 
-//No real change here, just testing the webhooks
 
-let hiddenDomains = ["dailymail.co.uk"]
+let hiddenDomains = ["dailymail.co.uk", "cbsnews.com"]
+let hiddenTitleKeywords = ["chatgpt", "gpt"] //These should stay lowercase...
  
-function hidedomainsonhn_main() {
-    let links = document.getElementsByClassName("sitestr");
+function hncleaner_main() {
+
     let numberOfBlocked = 0
- 
+
+    //First blocking based on domains...
+    let links = document.getElementsByClassName("sitestr");
     for (let link of links) {
         if (hiddenDomains.includes(link.innerHTML)) {
-            let owner = link.closest(".title");
-            owner.firstChild?.replaceWith(hidedomainsonhn_createBlockNotice(link.innerHTML))
+            hidepost_hidePost(link.closest(".athing"))
             numberOfBlocked++
+            continue
         }
+
+        //While we're here we might as well find the title of this post and potentially block based on that...
+        let titleHolder = link.closest(".titleline")
+        const title = titleHolder.firstChild.textContent.toLocaleLowerCase()
+        for (const word of hiddenTitleKeywords){
+            if (!title.includes(word)) continue;
+            hidepost_hidePost(link.closest(".athing"))
+            numberOfBlocked++
+            break
+        }
+       
+
     }
- 
     if (numberOfBlocked) {
-        hidedomainsonhn_addBlockCount(numberOfBlocked);
+        hncleaner_addBlockCount(numberOfBlocked);
     }
 }
  
-function hidedomainsonhn_createBlockNotice(domain) {
-    const notice = document.createElement("p");
-    notice.innerText = domain
-    notice.style.width = "fit-content"
-    notice.style.fontSize = "10px"
-    notice.style.padding = "2px"
-    notice.style.textDecoration = "line-through"
+function hncleaner_createBlockNotice() {
+    //Acually decided to have this return null just to make things cleaner
+    const notice = document.createElement("div");
     return notice
 }
+
+function hidepost_hidePost(owner){
+    owner.nextElementSibling?.nextElementSibling?.remove() //Removing "spacer" element
+    owner.nextElementSibling?.remove() //Removing comments
+    owner.replaceWith(hncleaner_createBlockNotice()) //Removing title
+}
  
-function hidedomainsonhn_addBlockCount(blockCount) {
+function hncleaner_addBlockCount(blockCount) {
     const text = document.createElement("p")
     text.style.margin = "0 0 8 0"
     text.style.userSelect = "none"
-    text.innerText = `Blocked domains: ${blockCount}`
+    text.innerText = `Hidden posts: ${blockCount}`
     text.style.color = "grey"
     text.style.fontSize = "10px"
     document.getElementById("pagespace")?.after(text)
 }
  
-hidedomainsonhn_main()
+hncleaner_main()
