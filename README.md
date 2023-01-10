@@ -1,2 +1,9 @@
-# hacker-news-cleaner
-Browser userscript that removes posts that have certain keywords or come from certain 
+# Hacker News Cleaner
+
+This is just a simple script to hide posts by specific domains or keywords in HackerNews.
+
+Made after seeing https://news.ycombinator.com/item?id=30468694
+
+After installing it, you'd want to update the hiddenDomains array with the domains you want to hide.
+
+`https://greasyfork.org/en/scripts/456182-hide-domains-and-keywords-on-hackernews` is set up to automatically pull from this repo (using webhooks) to update.
