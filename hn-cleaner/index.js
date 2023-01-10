@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name     Hide Domains on HackerNews
+// @name     HackerNews Post Hider (based on post Domains and Titles)
 // @match https://news.ycombinator.com/
 // @match https://news.ycombinator.com/?p=*
-// @version  1.2 
+// @version  2.0
 // @grant    none
 // @namespace ahappyviking
 // @license MIT
