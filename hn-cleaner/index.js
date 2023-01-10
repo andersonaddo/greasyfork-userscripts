@@ -2,7 +2,7 @@
 // @name     Hide Domains on HackerNews
 // @match https://news.ycombinator.com/
 // @match https://news.ycombinator.com/?p=*
-// @version  1.0
+// @version  1.2 
 // @grant    none
 // @namespace ahappyviking
 // @license MIT
@@ -10,6 +10,8 @@
 // @icon https://www.kindpng.com/picc/m/61-613142_see-no-evil-monkey-icon-monkey-eyes-closed.png
 // ==/UserScript==
  
+//No real change here, just testing the webhooks
+
 let hiddenDomains = ["dailymail.co.uk"]
  
 function hidedomainsonhn_main() {
