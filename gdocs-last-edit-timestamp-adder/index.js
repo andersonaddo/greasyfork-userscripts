@@ -9,7 +9,37 @@
 // ==/UserScript==
 
 (function () {
-    //Empty just to make sure webhooks for GreasyFork is working
-    //Another dummy push
-    //Another dummy push
-  })();
+  function addBackRevisionVisualText() {
+    const revisionButtonElement = document.getElementById("docs-revisions-appbarbutton");
+    var textFromRevisionButtonElement = revisionButtonElement.getAttribute("ariel-label");
+    const menubarElement = document.getElementById("docs-menubar");
+    const revisionVisualTextHTML = "<div id=\"revisionVisualText\" class=\"menu-button goog-control goog-inline-block\" role=\"menuitem\" style=\"background-color: transparent;text-decoration: underline;\" data-tooltip=\"Open version history\"></div>";
+    const rangeForRevisionVisualTextHTML = document.createRange();
+    const fragmentForRevisionVisualTextHTML = rangeForRevisionVisualTextHTML.createContextualFragment(revisionVisualTextHTML);
+    menubarElement.appendChild(fragmentForRevisionVisualTextHTML);
+    const revisionVisualTextElement = document.getElementById("revisionVisualText");
+
+
+    function callback() {
+      console.log(revisionButtonElement.dataset.tooltip)
+      textFromRevisionButtonElement = revisionButtonElement.getAttribute("data-tooltip");
+      revisionVisualTextElement.innerHTML = textFromRevisionButtonElement;
+    }
+
+    const observer = new MutationObserver(callback);
+    observer.observe(revisionButtonElement, {
+      attributeFilter: ["tooltip", "data-tooltip"],
+      attributeOldValue: true,
+    });
+
+    revisionVisualTextElement.addEventListener("mousedown", function (event) {
+      revisionButtonElement.dispatchEvent(new MouseEvent("mousedown"));
+      revisionButtonElement.classList.remove("jfk-button-hover");
+      revisionButtonElement.dispatchEvent(new MouseEvent("mouseup"));
+      event.stopPropagation(); // fixes bug where menus would open on hover after first click of the revisionVisualTextElement
+    });
+
+    revisionButtonElement.addEventListener("mouseenter", (event) => { revisionButtonElement.classList.add("jfk-button-hover"); }, false);
+  }
+  addBackRevisionVisualText();
+})();
