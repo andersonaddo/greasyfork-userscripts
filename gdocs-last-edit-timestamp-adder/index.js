@@ -6,6 +6,7 @@
 // @match        https://docs.google.com/document*
 // @match        https://docs.google.com/presentation*
 // @match        https://docs.google.com/spreadsheets*
+// @icon         https://cdn-icons-png.flaticon.com/512/1674/1674929.png
 // ==/UserScript==
 
 (function () {
