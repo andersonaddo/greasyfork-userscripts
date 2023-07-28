@@ -11,6 +11,7 @@
 
 // <<INSTANCES START HERE>>
 // [Will be automatically updated by Github Actions]
+// @match https://reddi.tk/*
 // <<INSTANCES END HERE>>
 
 // ==/UserScript==
