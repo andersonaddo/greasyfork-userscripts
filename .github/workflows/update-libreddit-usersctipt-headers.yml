@@ -1,0 +1,32 @@
+name: Update Libreddit userscript metadata
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Daily
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch HEAD
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: cd ./reddit-userscripts/utils && npm install
+
+      - name: Run metadata update script
+        run: cd ./reddit-userscripts/utils && npx ts-node userscript-metadata-updater.ts
+
+      - name: Commit and push changes
+        run: |
+          # https://github.com/actions/checkout/discussions/479
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add reddit-userscripts/auto-libreddit-quota-redirect.js
+          git add reddit-userscripts/libreddit-new-instance-button.js
+          git commit -m "Update metadata for libreddit scripts"
+          git push
