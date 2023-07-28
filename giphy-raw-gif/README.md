@@ -1,0 +1,1 @@
+Adds buttons to copy the raw url of a gif on GIPHY, or visit the raw gif in the browser.
