@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Libreddit Quota Redirector
 // @namespace    happyviking
-// @version      1.1.0
+// @version      1.2.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
