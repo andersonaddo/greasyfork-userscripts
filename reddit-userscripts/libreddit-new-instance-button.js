@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Libreddit 
 // @namespace    happyviking
-// @version      1.6.0
+// @version      1.7.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
