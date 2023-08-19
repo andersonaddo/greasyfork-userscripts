@@ -1,31 +1,84 @@
 // ==UserScript==
 // @name         "Ship It" GIF button for Github Review
-// @namespace    happyviking
-// @version      1.0.0
+// @namespace    happyvikingasasds
+// @version      1.1.0
 // @grant        none
 // @license      MIT
+// @icon         https://www.clipartbest.com/cliparts/RTd/g57/RTdg57qbc.png
 // @description  Adds a button to Github to add "Let's ship it!" GIFs when reviewing PRs
-// @icon         https://www.sail.nl/app/uploads/2019/11/ATYLA-Picture-of-the-ship-and-crew-1.jpg
 // @author       HappyViking
 // @grant        none
-// @match        https://github.com/*/pull/*
+// @match        https://github.com/*
 // ==/UserScript==
 
+const delay = (t) => new Promise((r) => setTimeout(r, t))
+
 const main = () => {
+  attemptButtonSetup()
+
+  const rootHtmlNode = document.documentElement
+  const config = { childList: true };
+  const callback = (mutationList, observer) => {
+    if (mutationList.filter(x => x.addedNodes.length > 0).length > 0) {
+      delay(1000).then(attemptButtonSetup)
+    }
+  };
+
+  const observer = new MutationObserver(callback);
+  observer.observe(rootHtmlNode, config);
+}
+
+const attemptGetPRReviewSection = () => {
   const feedbackModal = document.getElementById("review-changes-modal")
-  if (!feedbackModal) return
+  if (!feedbackModal) return null;
   const buttonPanelQuery = feedbackModal.getElementsByClassName("form-actions")
-  if (buttonPanelQuery.length == 0) return;
-  const buttonPanel = buttonPanelQuery[0]
+  if (buttonPanelQuery.length == 0) return null;
+  return buttonPanel = buttonPanelQuery[0]
+}
 
+const attemptGetNewCommentSection = () => {
+  const commentFormSection = document.getElementById("partial-new-comment-form-actions")
+  console.log(commentFormSection)
+  if (!commentFormSection) return null;
+  const sampleButton = commentFormSection.querySelector("button")
+  console.log(sampleButton)
+  if (!sampleButton) return null;
+  return sampleButton.parentElement.parentElement
+}
 
-  const newButton = document.createElement("button")
-  buttonPanel.prepend(newButton)
+const attemptButtonSetup = () => {
+
+  onClickTarget = ""
+  buttonID = ""
+  buttonParent = null
+
+  if (!document.getElementById("shipitbuttonpr")) {
+    buttonParent = attemptGetPRReviewSection()
+    if (buttonParent) {
+      onClickTarget = "#pull_request_review_body"
+      buttonID = "shipitbuttonpr"
+    }
+  }
+
+  if (!buttonParent && !document.getElementById("shipitbuttonissue")) {
+    buttonParent = attemptGetNewCommentSection()
+    if (buttonParent) {
+      onClickTarget = "#new_comment_field"
+      buttonID = "shipitbuttonissue"
+    }
+  }
+
+  if (!buttonParent) return
+
+  //Have to make it a div cuz some forms in Github have all buttons perform automatic logic, which I don't want
+  const newButton = document.createElement("div")
+  newButton.id = buttonID
+  buttonParent.prepend(newButton)
   //Copying from the existing "submit" button
   //But if you want you can also look into more styles from:
   //https://github.githubassets.com/assets/primer-8f43f7721dc7.css
   //though I think the suffix to "primer" might change by the time you read this
-  newButton.classList = "Button--primary Button--small Button float-left mr-1" 
+  newButton.classList = "Button--primary Button--small Button float-left mr-1"
   const buttonContentHolder = document.createElement("span")
   buttonContentHolder.className = "Button-content"
   newButton.append(buttonContentHolder)
@@ -35,10 +88,10 @@ const main = () => {
   buttonLabel.innerHTML = "Ship that shit"
 
   const theme = window.getComputedStyle(newButton).getPropertyValue("color-scheme"); //Cant just access via "style" because it's passed down to the button; it's not inline
-  if (theme == "light"){
-    newButton.style.backgroundImage="linear-gradient(319deg, rgba(255,126,1,1) 8%, rgba(229,110,21,1) 40%, rgba(179,52,4,1) 81%)"
-  }else{
-    newButton.style.backgroundImage="linear-gradient(0deg, rgba(212,74,38,1) 0%, rgba(254,128,13,1) 100%)"
+  if (theme == "light") {
+    newButton.style.backgroundImage = "linear-gradient(319deg, rgba(255,126,1,1) 8%, rgba(229,110,21,1) 40%, rgba(179,52,4,1) 81%)"
+  } else {
+    newButton.style.backgroundImage = "linear-gradient(0deg, rgba(212,74,38,1) 0%, rgba(254,128,13,1) 100%)"
   }
 
   const template = document.createElement('template'); //<template /> is specifically meant for string->html logic
@@ -52,14 +105,13 @@ const main = () => {
   </svg>`
 
   const buttonIcon = template.content.firstChild;
-  buttonIcon.className="Button--visual"
+  buttonIcon.className = "Button--visual"
   newButton.append(buttonIcon)
 
   newButton.addEventListener("click", () => {
-    const textarea = feedbackModal.querySelector("#pull_request_review_body")
+    const textarea = document.querySelector(onClickTarget)
     textarea.value += `\n\n<img src="https://i.shipit.today" height=100/>\n<sup>Let's ship it! <a href="https://shipit.today/">Img source.<a/></sup>`
   })
 }
 
 main()
-
