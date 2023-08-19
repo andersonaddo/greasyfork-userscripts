@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         "Ship It" GIF button for Github Review
 // @namespace    happyvikingasasds
-// @version      1.1.0
+// @version      1.2.0
 // @grant        none
 // @license      MIT
-// @icon         https://www.clipartbest.com/cliparts/RTd/g57/RTdg57qbc.png
 // @description  Adds a button to Github to add "Let's ship it!" GIFs when reviewing PRs
 // @author       HappyViking
 // @grant        none
