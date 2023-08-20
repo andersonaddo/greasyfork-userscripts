@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Libreddit 
 // @namespace    happyviking
-// @version      1.23.0
+// @version      1.24.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -10,14 +10,14 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
-// @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
+// @match https://libreddit.cachyos.org/*
 // @match https://libreddit.domain.glass/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.kavin.rocks/*
+// @match https://libreddit.kutay.dev/*
 // @match https://libreddit.lunar.icu/*
 // @match https://libreddit.oxymagnesium.com/*
-// @match https://libreddit.privacy.com.de/*
 // @match https://libreddit.privacydev.net/*
 // @match https://libreddit.pussthecat.org/*
 // @match https://libreddit.tux.pizza/*
@@ -26,7 +26,6 @@
 // @match https://lr.artemislena.eu/*
 // @match https://lr.vern.cc/*
 // @match https://r.darklab.sh/*
-// @match https://reddit.baby/*
 // @match https://reddit.leptons.xyz/*
 // @match https://reddit.smnz.de/*
 // @match https://reddit.utsav2.dev/*
