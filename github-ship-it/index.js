@@ -1,16 +1,21 @@
 // ==UserScript==
 // @name         "Ship It" GIF button for Github Review
 // @namespace    happyvikingasasds
-// @version      1.2.0
+// @version      1.3.0
 // @grant        none
 // @license      MIT
 // @description  Adds a button to Github to add "Let's ship it!" GIFs when reviewing PRs
 // @author       HappyViking
 // @grant        none
 // @match        https://github.com/*
+// @require      https://cdn.jsdelivr.net/npm/tsparticles-confetti@2.12.0/tsparticles.confetti.bundle.min.js
 // ==/UserScript==
 
 const delay = (t) => new Promise((r) => setTimeout(r, t))
+
+const randomInRange = (min, max) => {
+  return Math.random() * (max - min) + min;
+}
 
 const main = () => {
   attemptButtonSetup()
@@ -37,10 +42,8 @@ const attemptGetPRReviewSection = () => {
 
 const attemptGetNewCommentSection = () => {
   const commentFormSection = document.getElementById("partial-new-comment-form-actions")
-  console.log(commentFormSection)
   if (!commentFormSection) return null;
   const sampleButton = commentFormSection.querySelector("button")
-  console.log(sampleButton)
   if (!sampleButton) return null;
   return sampleButton.parentElement.parentElement
 }
@@ -107,9 +110,16 @@ const attemptButtonSetup = () => {
   buttonIcon.className = "Button--visual"
   newButton.append(buttonIcon)
 
-  newButton.addEventListener("click", () => {
+  newButton.addEventListener("click", (event) => {
     const textarea = document.querySelector(onClickTarget)
     textarea.value += `\n\n<img src="https://i.shipit.today" height=100/>\n<sup>Let's ship it! <a href="https://shipit.today/">Img source.<a/></sup>`
+    confetti({
+      angle: randomInRange(55, 125),
+      spread: randomInRange(50, 70),
+      particleCount: randomInRange(50, 100),
+      position: { x: (event.clientX / window.innerWidth) * 100, y: (event.clientX / window.innerHeight) * 100},
+      shapes: ["circle", "square", "line", "spiral", "star"],
+    });
   })
 }
 
