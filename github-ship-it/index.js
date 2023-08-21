@@ -117,7 +117,7 @@ const attemptButtonSetup = () => {
       angle: randomInRange(55, 125),
       spread: randomInRange(50, 70),
       particleCount: randomInRange(50, 100),
-      position: { x: (event.clientX / window.innerWidth) * 100, y: (event.clientX / window.innerHeight) * 100},
+      position: { x: (event.clientX / window.innerWidth) * 100, y: (event.clientY / window.innerHeight) * 100},
       shapes: ["circle", "square", "line", "spiral", "star"],
     });
   })
