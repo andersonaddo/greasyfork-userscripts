@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         "Ship It" GIF button for Github Review
 // @namespace    happyvikingasasds
-// @version      1.3.0
+// @version      1.4.0
 // @grant        none
 // @license      MIT
 // @description  Adds a button to Github to add "Let's ship it!" GIFs when reviewing PRs
