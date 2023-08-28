@@ -13,7 +13,7 @@ const cfg = merge(webpackConfig, {
   },
   optimization: {
     // if you need minimize, you need to config minimizer to keep all comments
-    // to keep userscript meta.
+    // to keep userscript metadata.
     minimize: false,
   },
   cache: {

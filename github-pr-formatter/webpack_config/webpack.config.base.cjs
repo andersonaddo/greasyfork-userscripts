@@ -15,9 +15,6 @@ const webpackConfig = {
     path: path.resolve(__dirname, "../dist"),
   },
   target: "web",
-  externals: {
-    jquery: "$",
-  },
   module: {
     rules: [
       {
@@ -25,10 +22,6 @@ const webpackConfig = {
         use: {
           loader: "ts-loader",
         },
-      },
-      {
-        test: /\.less$/,
-        use: ["style-loader", "css-loader", "less-loader"],
       },
       {
         test: /\.css$/,
