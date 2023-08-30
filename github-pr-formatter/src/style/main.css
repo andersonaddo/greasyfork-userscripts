@@ -1,3 +1,69 @@
-body {
-   
+.badgeHolder{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:center;
+  gap: 8px;
+}
+
+.badge{
+  height: 25px;
+  width: fit-content;
+  padding: 0px 8px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:center;
+}
+
+.badgeText{
+  margin: 0px;
+  white-space: nowrap
+}
+
+.icon {
+  height: 20px
+}
+
+.iconHolder{
+  margin: 0px 8px 0px 0px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+.divider{
+  width: 100%;
+  text-align: center;
+  background-color: grey;
+  padding: 2px
+}
+
+.lowPriorityPR{
+  opacity: 0.3
+}
+
+.yellow{
+  border: 1px solid #3C3729;
+  background-color: #FCE205;
+  color: #3C3729;
+}
+
+.red{
+  border: 1px solid #941410;
+  background-color: #FF8884;
+  color: #941410
+}
+
+.green{
+  border: 1px solid #043927;
+  background-color: #29AB87;
+  color: #043927
+}
+
+.hollow{
+  background-color: none;
+  border: 1px solid #EEEEEE;
+  color: #EEEEEE
 }
