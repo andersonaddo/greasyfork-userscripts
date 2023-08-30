@@ -26,11 +26,11 @@ const REPO_DEFAULT = "<Repo Here>"
 
 let user_pref = new GM_config({
   id: 'MyConfig',
-  title: 'Script Settings (refresh page after saving)',
+  title: 'Script Settings (refresh page after saving; you can open this again by going to GitHub footer)',
   fields: {
     token:
     {
-      label: 'Github Personal Access Token',
+      label: 'Github Personal Access Token (only read-only necessary)',
       type: 'text',
       default: TOKEN_DEFAULT
     },
