@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Libreddit Quota Redirector
 // @namespace    happyviking
-// @version      1.25.0
+// @version      1.26.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -11,24 +11,18 @@
 
 // <<INSTANCES START HERE>>
 // @match https://libreddit.bus-hit.me/*
-// @match https://libreddit.cachyos.org/*
-// @match https://libreddit.domain.glass/*
 // @match https://libreddit.freedit.eu/*
-// @match https://libreddit.kavin.rocks/*
-// @match https://libreddit.kutay.dev/*
-// @match https://libreddit.lunar.icu/*
 // @match https://libreddit.oxymagnesium.com/*
+// @match https://libreddit.privacy.com.de/*
 // @match https://libreddit.privacydev.net/*
-// @match https://libreddit.pussthecat.org/*
 // @match https://libreddit.tux.pizza/*
 // @match https://lr.4201337.xyz/*
 // @match https://lr.aeong.one/*
-// @match https://lr.artemislena.eu/*
 // @match https://lr.vern.cc/*
 // @match https://r.darklab.sh/*
+// @match https://reddit.baby/*
+// @match https://reddit.invak.id/*
 // @match https://reddit.leptons.xyz/*
-// @match https://reddit.smnz.de/*
-// @match https://reddit.utsav2.dev/*
 // @match https://safereddit.com/*
 // @match https://snoo.habedieeh.re/*
 // <<INSTANCES END HERE>>
