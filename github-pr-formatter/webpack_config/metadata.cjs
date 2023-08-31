@@ -2,7 +2,6 @@
 module.exports = {
   name: "Github PR Organizer & Formatter",
   namespace: "happyviking",
-  version: 1.0,
   description: "Organizes and tabs PRs to make it easier to see what to prioritize.",
   author: "HappyViking",
   match: ["https://github.com/*/pulls*"],
@@ -10,6 +9,6 @@ module.exports = {
   "run-at": "document-end",
   //The `require` field needs to be here, even if I don't require anything so my dev npm script works
   require: [""],
-  version: "1.0.0",
+  version: "1.1.0",
   license: "MIT"
 };

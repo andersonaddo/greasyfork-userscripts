@@ -25,7 +25,7 @@ export interface SingularPRInfo {
     } 
     reviewRequests: { //Users leave this array once they make a review, I believe
         nodes: Array<{
-            requestedReviewer: User
+            requestedReviewer: User | null //can be null if requestedReviewer is a group or a bot or something
         }>
     },
     latestNonPendingReviews: {

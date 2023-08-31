@@ -26,7 +26,7 @@ const makeBadge = (icon: IconInfo, href: string) => {
 
     const template = document.createElement('template');
     template.innerHTML = icon.iconString;
-    iconHolder.appendChild(template.content.firstChild)
+    iconHolder.appendChild(template.content.firstChild as Element)
 
     badge.appendChild(iconHolder)
     badge.appendChild(text)
@@ -72,4 +72,10 @@ export const getSomeoneRequestedChanges = (href: string) => makeBadge({
     className: "red",
     iconString: noticeIconString,
     text: "Changes Requested"
+}, href)
+
+export const getNoPrimaryBadge = (href: string) => makeBadge({
+    className: "red",
+    iconString: noticeIconString,
+    text: "No Primary"
 }, href)

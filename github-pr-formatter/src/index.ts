@@ -3,7 +3,8 @@ import {
   getBadgeHolder, getByYouBadge,
   getPendingPrimaryBadge, getPendingSecondaryBadge,
   getYouApprovedBadge, getYouRequestedChanges,
-  getSomeoneRequestedChanges
+  getSomeoneRequestedChanges,
+  getNoPrimaryBadge
 } from "./badges";
 //Found it easier to just copy the js from the source into this project and reference from it
 import { GM_config } from "./external/GM_Config";
@@ -18,6 +19,7 @@ interface PRSummary {
   upToDateReview?: PRReviewState
   prState?: OverallPRReviewStatus
   requiresAttention?: boolean
+  noPrimary?: boolean
 }
 
 const TOKEN_DEFAULT = "<Token Here>"
@@ -36,7 +38,7 @@ let user_pref = new GM_config({
     },
     repo:
     {
-      label: 'Repo name',
+      label: 'Repo name. Used for query: `is:open is:pr involves:@me archived:false repo:xxx`',
       type: 'text',
       default: REPO_DEFAULT
     },
@@ -71,13 +73,14 @@ async function main() {
   const settingsOpenerText = document.createElement("p")
   settingsOpenerText.innerText = "Open userscript settings"
   settingsOpener.appendChild(settingsOpenerText)
-  footer.appendChild(settingsOpener)
   settingsOpener.addEventListener("click", () => user_pref.open())
+  footer?.appendChild(settingsOpener)
 
   const repoInfo = await getPRInfo(user_pref.get("repo"), user_pref.get("token"))
   const PRListElements = document.querySelectorAll("div[id^='issue_']") //ids starting with "issue_"
 
   const requireAttention: Element[] = []
+  const doesntRequireAttentionYours: Element[] = []
   const doesntRequireAttention: Element[] = []
 
   PRListElements.forEach(row => {
@@ -93,8 +96,8 @@ async function main() {
     summary.waitingSecondary = associatedPRInfo.reviewRequests.nodes.some(x => isCurrentUser(x.requestedReviewer))
     summary.upToDateReview = latestReviewInfo
     summary.unseenByUser = associatedPRInfo.isReadByViewer
-    summary.requiresAttention = summary.waitingSecondary || summary.waitingPrimary || (summary.byUser && summary.prState == "CHANGES_REQUESTED")
-
+    summary.noPrimary = associatedPRInfo.assignees.nodes.length == 0;
+    summary.requiresAttention = summary.waitingSecondary || summary.waitingPrimary || (summary.byUser && summary.prState == "CHANGES_REQUESTED") || (summary.byUser && summary.noPrimary)
 
     if (row.children.length < 1) return
     const rowContentHolder = row.children[0]
@@ -104,6 +107,7 @@ async function main() {
     const href = row.querySelector("a[id^='issue_']")?.getAttribute("href") ?? ""
 
     if (summary.byUser && summary.prState == "CHANGES_REQUESTED") badgeHolder.append(getSomeoneRequestedChanges(href))
+    if (summary.noPrimary) badgeHolder.append(getNoPrimaryBadge(href))
     if (summary.waitingPrimary) badgeHolder.append(getPendingPrimaryBadge(href))
     if (summary.waitingSecondary) badgeHolder.append(getPendingSecondaryBadge(href))
     if (summary.upToDateReview == "APPROVED") badgeHolder.append(getYouApprovedBadge(href))
@@ -113,22 +117,30 @@ async function main() {
     row.remove()
     if (summary.requiresAttention) {
       requireAttention.push(row)
-    } else {
+    } else if (summary.byUser) {
+      doesntRequireAttentionYours.push(row)
+    }else{
       doesntRequireAttention.push(row)
     }
   })
 
   doesntRequireAttention.reverse()
+  doesntRequireAttentionYours.reverse()
   requireAttention.reverse()
 
   const attentionDivider = document.createElement("p")
   attentionDivider.innerText = "Requires Attention"
   attentionDivider.classList.add("divider")
 
+  const nonAttentionYoursDivider = document.createElement("p")
+  nonAttentionYoursDivider.style.marginTop = "24px"
+  nonAttentionYoursDivider.innerText = "Other - Yours"
+  nonAttentionYoursDivider.classList.add("divider")
+
   const nonAttentionDivider = document.createElement("p")
-  nonAttentionDivider.innerText = "Other"
-  nonAttentionDivider.classList.add("divider")
   nonAttentionDivider.style.marginTop = "24px"
+  nonAttentionDivider.innerText = "Other - Misc"
+  nonAttentionDivider.classList.add("divider")
 
   const containers = document.getElementsByClassName("js-active-navigation-container")
   if (containers.length == 0) return
@@ -139,6 +151,15 @@ async function main() {
     PRListHolder.appendChild(attentionDivider)
     requireAttention.forEach(x => PRListHolder.appendChild(x))
   }
+
+  if (doesntRequireAttentionYours.length != 0) {
+    PRListHolder.appendChild(nonAttentionYoursDivider)
+    doesntRequireAttentionYours.forEach(x => {
+      x.classList.add("lowPriorityPR")
+      PRListHolder.appendChild(x)
+    })
+  }
+
   if (doesntRequireAttention.length != 0) {
     PRListHolder.appendChild(nonAttentionDivider)
     doesntRequireAttention.forEach(x => {
@@ -148,8 +169,8 @@ async function main() {
   }
 }
 
-function isCurrentUser(x: User) {
-  return x.login == user_pref.get("username")
+function isCurrentUser(x: User | null) {
+  return x != null && x.login == user_pref.get("username")
 }
 
 function clampedAt(arr: HTMLCollection, index: number) {
