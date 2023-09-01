@@ -14,10 +14,8 @@ const USERNAME = "<Change_username_here>"
 
 const main = () => {
     const toolbar = document.getElementById("js-issues-toolbar")
-    console.log(toolbar)
     if (!toolbar) return
     const query = toolbar.getElementsByClassName("table-list-header-toggle");
-    console.log(query)
     if (query.length == 0) return
     const buttonParent = query[0]
 
