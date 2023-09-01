@@ -60,7 +60,7 @@ const makeGraphQLQuery = (repo: string) => `{
     search(
       query: "is:open is:pr involves:@me archived:false repo:${repo}"
       type: ISSUE
-      first: 10
+      first: 30
     ) {
       nodes {
         ... on PullRequest {
