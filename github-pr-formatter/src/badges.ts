@@ -79,3 +79,10 @@ export const getNoPrimaryBadge = (href: string) => makeBadge({
     iconString: noticeIconString,
     text: "No Primary"
 }, href)
+
+const truncate = (str: string, length: number) => str.length > length ? `${str.substring(0, length)}...` : str;
+export const getFailedCIBadge = (href: string, CIName: string) => makeBadge({
+    className: "red",
+    iconString: noticeIconString,
+    text: truncate(CIName, 10)
+}, href)

@@ -42,6 +42,13 @@ the predefined query), the script just won't sort it (so it won't be put under a
 and won't be given any badges).
 
 There are 3 headers:
-- Requires Attention: PRs that are yours with but have no assignee, PRs that are with changes requested, or a PRs you haven't reviewed but they requested a [new] review from you.
+- Requires Attention: 
+  - PRs that are yours with but have no assignee
+  - PRs that are yours with changes requested
+  - PRs that are yours that have a failing CI test who's title doesn't contain a whitelisted substring (you can add those in the userscript settings)
+  - PRs that have requested a [new] review from you.
+
 - Others - Yours: PRs that are yours but don't require attention
 - Others - Misc: PRs that are not yours and don't require attention
+
+The settings for this userscript will be in the footer of Github on any repo's /pulls page.

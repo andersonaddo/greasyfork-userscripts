@@ -5,9 +5,22 @@ export interface User {
     login: string
 }
 
+export interface Commit{
+  commit:{
+    status?:{
+      state: CIStatus,
+      contexts:Array<{
+        context: string
+        state: CIStatus
+      }>
+    }
+  }
+}
+
 export type PRReviewState = "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED" | "DISMISSED" | "PENDING"
 type PRState = "OPEN" | "MERGED" | "CLOSED"
 export type OverallPRReviewStatus = "CHANGES_REQUESTED" | "APPROVED" | "REVIEW_REQUIRED" | null
+type CIStatus = "EXPECTED" | "ERROR" | "FAILURE" | "PENDING" | "SUCCESS"
 
 export interface SingularPRInfo {
     id: string,
@@ -33,6 +46,9 @@ export interface SingularPRInfo {
             state: PRReviewState
             author: User
         }>
+    }
+    commits:{
+      nodes: Array<Commit>
     }
 }
 
@@ -105,6 +121,19 @@ const makeGraphQLQuery = (repo: string) => `{
                   id
                   name
                   login
+                }
+              }
+            }
+          }
+          commits(last:1){
+            nodes{
+              commit{
+                status{
+                  state
+                  contexts{
+                    state,
+                    context,
+                  }
                 }
               }
             }

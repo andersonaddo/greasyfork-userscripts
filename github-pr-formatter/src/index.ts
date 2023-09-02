@@ -1,10 +1,11 @@
-import { OverallPRReviewStatus, PRReviewState, SingularPRInfo, User, getPRInfo } from "./api";
+import { Commit, OverallPRReviewStatus, PRReviewState, SingularPRInfo, User, getPRInfo } from "./api";
 import {
   getBadgeHolder, getByYouBadge,
   getPendingPrimaryBadge, getPendingSecondaryBadge,
   getYouApprovedBadge, getYouRequestedChanges,
   getSomeoneRequestedChanges,
-  getNoPrimaryBadge
+  getNoPrimaryBadge,
+  getFailedCIBadge
 } from "./badges";
 //Found it easier to just copy the js from the source into this project and reference from it
 import { GM_config } from "./external/GM_Config";
@@ -20,11 +21,13 @@ interface PRSummary {
   prState?: OverallPRReviewStatus
   requiresAttention?: boolean
   noPrimary?: boolean
+  nonTrivialFailedCI?: string | undefined
 }
 
 const TOKEN_DEFAULT = "<Token Here>"
 const USERNAME_DEFAULT = "<Username Here>"
 const REPO_DEFAULT = "<Repo Here>"
+const IGNORED_CI_DEFAULT = ""
 
 let user_pref = new GM_config({
   id: 'MyConfig',
@@ -47,6 +50,11 @@ let user_pref = new GM_config({
       label: 'Github Username',
       type: 'text',
       default: USERNAME_DEFAULT
+    },
+    ignoredCI: {
+      label: '[Optional] CI test titles to ignore, comma separated',
+      type: 'text',
+      default: IGNORED_CI_DEFAULT
     }
   },
   events: {
@@ -77,11 +85,15 @@ async function main() {
   footer?.appendChild(settingsOpener)
 
   const repoInfo = await getPRInfo(user_pref.get("repo"), user_pref.get("token"))
+  console.log(`Remaining Github GraphQL Quota: ${repoInfo.data.rateLimit.remaining}/${repoInfo.data.rateLimit.limit}`)
+
   const PRListElements = document.querySelectorAll("div[id^='issue_']") //ids starting with "issue_"
 
   const requireAttention: Element[] = []
   const doesntRequireAttentionYours: Element[] = []
   const doesntRequireAttention: Element[] = []
+
+  const ignoredCIs = (user_pref.get("ignoredCI") as string).trim().split(",").map(x => x.trim()).filter(x => x != "")
 
   PRListElements.forEach(row => {
     const rowId = row.id.replace("issue_", "")
@@ -97,7 +109,17 @@ async function main() {
     summary.upToDateReview = latestReviewInfo
     summary.unseenByUser = associatedPRInfo.isReadByViewer
     summary.noPrimary = associatedPRInfo.assignees.nodes.length == 0;
-    summary.requiresAttention = summary.waitingSecondary || summary.waitingPrimary || (summary.byUser && summary.prState == "CHANGES_REQUESTED") || (summary.byUser && summary.noPrimary)
+    summary.nonTrivialFailedCI = associatedPRInfo.commits.nodes
+      .map(x => extractFailingCIFromCommitInto(x, ignoredCIs))
+      .find(x => x != undefined)?.context
+
+
+    summary.requiresAttention = summary.waitingSecondary ||
+      summary.waitingPrimary ||
+      (summary.byUser && summary.prState == "CHANGES_REQUESTED") ||
+      (summary.byUser && summary.noPrimary) ||
+      (summary.byUser && summary.nonTrivialFailedCI != undefined)
+
 
     if (row.children.length < 1) return
     const rowContentHolder = row.children[0]
@@ -107,6 +129,7 @@ async function main() {
     const href = row.querySelector("a[id^='issue_']")?.getAttribute("href") ?? ""
 
     if (summary.byUser && summary.prState == "CHANGES_REQUESTED") badgeHolder.append(getSomeoneRequestedChanges(href))
+    if (summary.byUser && summary.nonTrivialFailedCI) badgeHolder.append(getFailedCIBadge(href, summary.nonTrivialFailedCI))
     if (summary.noPrimary) badgeHolder.append(getNoPrimaryBadge(href))
     if (summary.waitingPrimary) badgeHolder.append(getPendingPrimaryBadge(href))
     if (summary.waitingSecondary) badgeHolder.append(getPendingSecondaryBadge(href))
@@ -119,7 +142,7 @@ async function main() {
       requireAttention.push(row)
     } else if (summary.byUser) {
       doesntRequireAttentionYours.push(row)
-    }else{
+    } else {
       doesntRequireAttention.push(row)
     }
   })
@@ -175,4 +198,9 @@ function isCurrentUser(x: User | null) {
 
 function clampedAt(arr: HTMLCollection, index: number) {
   return arr[Math.min(arr.length - 1, index)]
+}
+
+function extractFailingCIFromCommitInto(commit: Commit, substringWhitelist: string[]) {
+  return commit.commit.status?.contexts
+    .find(ci => ci.state == "FAILURE" && !substringWhitelist.some(ciSubstring => ci.context.includes(ciSubstring)))
 }
