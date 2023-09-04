@@ -1,4 +1,8 @@
 name: Update Libreddit userscript metadata
+
+env:
+  SHOULD_COMMIT: NO
+
 on:
   workflow_dispatch:
   schedule:
@@ -22,6 +26,7 @@ jobs:
         run: cd ./reddit-userscripts/utils && npx ts-node userscript-metadata-updater.ts
 
       - name: Commit and push changes
+        if: ${{ env.SHOULD_COMMIT == 'YES' }}
         run: |
           # https://github.com/actions/checkout/discussions/479
           git config user.name 'github-actions[bot]'
