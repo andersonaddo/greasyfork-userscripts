@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Reddit to Libreddit
 // @namespace    happyviking
-// @version      1.0
+// @version      1.1
 // @description  Converts Reddit links to Libreddit links, and replaces old url in browser history. Also works in Firefox Android.
 // @author       HappyViking
 // @match        *://*.reddit.com/*
+// @exclude      *://*.reddit.com/media*
 // @icon         https://www.google.com/s2/favicons?domain=www.reddit.com
 // @grant        none
 // @run-at       document-start

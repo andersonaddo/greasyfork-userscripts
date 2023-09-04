@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Libreddit Quota Redirector
 // @namespace    happyviking
-// @version      1.37.0
+// @version      1.38.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -51,7 +51,7 @@ function main() {
     const addedMessage = document.createElement("p")
     addedMessage.textContent = "Redirecting you to new instance..."
     errorMessage.appendChild(addedMessage)
-    location.replace('https://farside.link/libreddit/' + window.location.pathname);
+    location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
 }
 
 main()

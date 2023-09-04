@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Libreddit 
 // @namespace    happyviking
-// @version      1.30.0
+// @version      1.31.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -53,8 +53,7 @@ function main() {
     firstDivInNavBar.prepend(newButton)
     newButton.appendChild(document.createTextNode("New Instance"))
     newButton.onclick = () => {
-        console.log("hi")
-        location.replace('https://farside.link/libreddit/' + window.location.pathname);
+        location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
     }
 }
 
