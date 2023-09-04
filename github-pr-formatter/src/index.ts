@@ -111,7 +111,7 @@ async function main() {
     summary.noPrimary = associatedPRInfo.assignees.nodes.length == 0;
     summary.nonTrivialFailedCI = associatedPRInfo.commits.nodes
       .map(x => extractFailingCIFromCommitInto(x, ignoredCIs))
-      .find(x => x != undefined)?.context
+      .find(x => x != undefined)?.node.name
 
 
     summary.requiresAttention = summary.waitingSecondary ||
@@ -201,6 +201,6 @@ function clampedAt(arr: HTMLCollection, index: number) {
 }
 
 function extractFailingCIFromCommitInto(commit: Commit, substringWhitelist: string[]) {
-  return commit.commit.status?.contexts
-    .find(ci => ci.state == "FAILURE" && !substringWhitelist.some(ciSubstring => ci.context.includes(ciSubstring)))
+  return commit.commit.statusCheckRollup?.contexts.edges
+    .find(ci => ci.node.conclusion == "FAILURE" && !substringWhitelist.some(ciSubstring => ci.node.name?.includes(ciSubstring)))
 }

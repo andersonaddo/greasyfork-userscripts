@@ -1,69 +1,76 @@
 import axios from "axios";
 
-export interface User {
-    name: string,
-    login: string
-}
+export type PRReviewState = "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED" | "DISMISSED" | "PENDING"
+type PRState = "OPEN" | "MERGED" | "CLOSED"
+export type OverallPRReviewStatus = "CHANGES_REQUESTED" | "APPROVED" | "REVIEW_REQUIRED" | null
+type CIStatusOverall = "EXPECTED" | "ERROR" | "FAILURE" | "PENDING" | "SUCCESS"
+type CIStatusIndividual = "ACTION_REQUIRED" | "TIMED_OUT" | "CANCELLED" | "FAILURE" | "SUCCESS" | "NEUTRAL" | "SKIPPED" | "STARTUP_FAILURE" | "STALE"
 
-export interface Commit{
-  commit:{
-    status?:{
-      state: CIStatus,
-      contexts:Array<{
-        context: string
-        state: CIStatus
-      }>
+
+interface PRInfo {
+  data: {
+    rateLimit: {
+      limit: number,
+      remaining: number,
+      used: number,
+      cost: number
+    },
+    search: {
+      nodes: Array<SingularPRInfo>
     }
   }
 }
 
-export type PRReviewState = "APPROVED" | "CHANGES_REQUESTED" | "COMMENTED" | "DISMISSED" | "PENDING"
-type PRState = "OPEN" | "MERGED" | "CLOSED"
-export type OverallPRReviewStatus = "CHANGES_REQUESTED" | "APPROVED" | "REVIEW_REQUIRED" | null
-type CIStatus = "EXPECTED" | "ERROR" | "FAILURE" | "PENDING" | "SUCCESS"
-
 export interface SingularPRInfo {
-    id: string,
-    title: string,
-    createdAt: string,
-    number: number,
-    isDraft: boolean,
-    state: PRState,
-    isReadByViewer: boolean,
-    reviewDecision: OverallPRReviewStatus
-    viewerLatestReview: PRReviewState,
-    author: User
-    assignees: {
-      nodes: User[]
-    } 
-    reviewRequests: { //Users leave this array once they make a review, I believe
-        nodes: Array<{
-            requestedReviewer: User | null //can be null if requestedReviewer is a group or a bot or something
-        }>
-    },
-    latestNonPendingReviews: {
-        nodes: Array<{
-            state: PRReviewState
-            author: User
-        }>
-    }
-    commits:{
-      nodes: Array<Commit>
-    }
+  id: string,
+  title: string,
+  createdAt: string,
+  number: number,
+  isDraft: boolean,
+  state: PRState,
+  isReadByViewer: boolean,
+  reviewDecision: OverallPRReviewStatus
+  viewerLatestReview: PRReviewState,
+  author: User
+  assignees: {
+    nodes: User[]
+  }
+  reviewRequests: { //Users leave this array once they make a review, I believe
+    nodes: Array<{
+      requestedReviewer: User | null //can be null if requestedReviewer is a group or a bot or something
+    }>
+  },
+  latestNonPendingReviews: {
+    nodes: Array<{
+      state: PRReviewState
+      author: User
+    }>
+  }
+  commits: {
+    nodes: Array<Commit>
+  }
 }
-
-interface PRInfo {
-    data: {
-        rateLimit: {
-            limit: number,
-            remaining: number,
-            used: number,
-            cost: number
-        },
-        search: {
-          nodes: Array<SingularPRInfo>
+export interface User {
+  name: string,
+  login: string
+}
+export interface Commit {
+  commit: {
+    statusCheckRollup?: {
+      state: CIStatusOverall,
+      contexts: {
+        checkRunCount: number,
+        edges: Array<CISummary>
       }
     }
+  }
+}
+
+interface CISummary {
+  node: {
+    name?: string,
+    conclusion?: CIStatusIndividual
+  }
 }
 
 const makeGraphQLQuery = (repo: string) => `{
@@ -125,14 +132,21 @@ const makeGraphQLQuery = (repo: string) => `{
               }
             }
           }
-          commits(last:1){
-            nodes{
-              commit{
-                status{
+          commits(last: 1) {
+            nodes {
+              commit {
+                statusCheckRollup {
                   state
-                  contexts{
-                    state,
-                    context,
+                  contexts(first: 30) {
+                    checkRunCount
+                    edges {
+                      node {
+                        ... on CheckRun {
+                          name
+                          conclusion
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -145,17 +159,17 @@ const makeGraphQLQuery = (repo: string) => `{
 
 
 export const getPRInfo = async (repo: string, token: string) => {
-    const axiosInstance = axios.create({
-        baseURL: 'https://api.github.com/graphql',
-        headers: {
-            Authorization: `bearer ${token}`,
-            "Content-Type": "application/json"
-        }
-    });
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.github.com/graphql',
+    headers: {
+      Authorization: `bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
 
-    let response = await axiosInstance.post('', {
-        query: makeGraphQLQuery(repo)
-    });
+  let response = await axiosInstance.post('', {
+    query: makeGraphQLQuery(repo)
+  });
 
-    return response.data as PRInfo
+  return response.data as PRInfo
 }
