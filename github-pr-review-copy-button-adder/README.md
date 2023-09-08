@@ -1,0 +1,1 @@
+I find it kind of annoying that when you're on the page for a Github PR that someone has reviewed, there isn't a copy button to copy the filenames of the files the person has commented on until you go to the "review" tab. This fixes that.

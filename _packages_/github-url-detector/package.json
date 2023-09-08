@@ -1,0 +1,11 @@
+{
+  "name": "bundled-github-url-detector",
+  "version": "1.0.1",
+  "description": "A userscript safe version of the github-url-detection package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
