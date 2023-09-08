@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         "Ship It" GIF button for Github Review
-// @namespace    happyvikingasasds
-// @version      1.4.0
+// @namespace    happyviking
+// @version      1.5.0
 // @grant        none
 // @license      MIT
 // @description  Adds a button to Github to add "Let's ship it!" GIFs when reviewing PRs
@@ -9,6 +9,7 @@
 // @grant        none
 // @match        https://github.com/*
 // @require      https://cdn.jsdelivr.net/npm/tsparticles-confetti@2.12.0/tsparticles.confetti.bundle.min.js
+// @require      https://unpkg.com/bundled-github-url-detector@1.0.0/index.js
 // ==/UserScript==
 
 const delay = (t) => new Promise((r) => setTimeout(r, t))
@@ -19,17 +20,6 @@ const randomInRange = (min, max) => {
 
 const main = () => {
   attemptButtonSetup()
-
-  const rootHtmlNode = document.documentElement
-  const config = { childList: true };
-  const callback = (mutationList, observer) => {
-    if (mutationList.filter(x => x.addedNodes.length > 0).length > 0) {
-      delay(1000).then(attemptButtonSetup)
-    }
-  };
-
-  const observer = new MutationObserver(callback);
-  observer.observe(rootHtmlNode, config);
 }
 
 const attemptGetPRReviewSection = () => {
@@ -123,4 +113,6 @@ const attemptButtonSetup = () => {
   })
 }
 
-main()
+attemptButtonSetup()
+document.addEventListener("soft-nav:end", attemptButtonSetup); 
+document.addEventListener("navigation:end", attemptButtonSetup);
