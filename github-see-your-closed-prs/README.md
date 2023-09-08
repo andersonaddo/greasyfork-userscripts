@@ -1,0 +1,1 @@
+Adds an extra button to see the closed PRs that you authored in a repo's PR list.

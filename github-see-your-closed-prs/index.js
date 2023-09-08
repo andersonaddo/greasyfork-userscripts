@@ -1,18 +1,21 @@
 // ==UserScript==
 // @name          Github See Your Closed PRs
 // @namespace     happyviking
-// @version       1.0.0
+// @version       1.1.0
 // @description   See PRs you created that are merged or closed
 // @author        HappyViking
-// @match         https://github.com/*/pulls*
-// @exclude       https://github.com/*/pulls/*
+// @match         https://github.com/*
 // @run-at        document-end
 // @license       MIT
+// @require      https://unpkg.com/bundled-github-url-detector@1.0.0/index.js
 // ==/UserScript==
 
-const USERNAME = "<Change_username_here>"
+const gh = githubUrlDetection
 
-const main = () => {
+const addClosedButton = () => {
+    if (!gh.isPRList()) return
+    const username = gh.utils.getUsername()
+    if (!username) return
     const toolbar = document.getElementById("js-issues-toolbar")
     if (!toolbar) return
     const query = toolbar.getElementsByClassName("table-list-header-toggle");
@@ -25,8 +28,10 @@ const main = () => {
     button.href = encodeURI("https://"
         + window.location.hostname
         + window.location.pathname
-        + `?q=is:pr+is:closed+author:${USERNAME}`)
+        + `?q=is:pr+is:closed+author:${username}`)
     buttonParent.append(button)
 }
 
-main()
+addClosedButton()
+document.addEventListener("soft-nav:end", addClosedButton); 
+document.addEventListener("navigation:end", addClosedButton);

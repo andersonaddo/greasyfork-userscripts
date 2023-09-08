@@ -10,6 +10,7 @@ import {
 //Found it easier to just copy the js from the source into this project and reference from it
 import { GM_config } from "./external/GM_Config";
 import "./style/main.css";
+import { isPRList, utils } from "github-url-detection"
 
 interface PRSummary {
   unseenByUser?: boolean
@@ -29,7 +30,7 @@ const USERNAME_DEFAULT = "<Username Here>"
 const REPO_DEFAULT = "<Repo Here>"
 const IGNORED_CI_DEFAULT = ""
 
-let user_pref = new GM_config({
+const user_pref = new GM_config({
   id: 'MyConfig',
   title: 'Script Settings (refresh page after saving; you can open this again by going to GitHub footer)',
   fields: {
@@ -64,9 +65,9 @@ let user_pref = new GM_config({
         user_pref.get("username") == USERNAME_DEFAULT) {
         user_pref.open()
       } else {
-        main().catch((e) => {
-          console.error(e);
-        });
+        organizeRepos()
+        document.addEventListener("soft-nav:end", organizeRepos);
+        document.addEventListener("navigation:end", organizeRepos);
       }
 
     }
@@ -74,121 +75,127 @@ let user_pref = new GM_config({
 }) as any;
 
 
-async function main() {
+async function organizeRepos() {
+  try {
+    if (!isPRList()) return
+    if (!utils.getRepositoryInfo()?.nameWithOwner == user_pref.get("repo")) return;
+    
+    const footer = document.querySelector("ul[aria-labelledby*=footer]")
+    const settingsOpener = document.createElement("li")
+    const settingsOpenerText = document.createElement("p")
+    settingsOpenerText.innerText = "Open userscript settings"
+    settingsOpener.appendChild(settingsOpenerText)
+    settingsOpener.addEventListener("click", () => user_pref.open())
+    footer?.appendChild(settingsOpener)
 
-  const footer = document.querySelector("ul[aria-labelledby*=footer]")
-  const settingsOpener = document.createElement("li")
-  const settingsOpenerText = document.createElement("p")
-  settingsOpenerText.innerText = "Open userscript settings"
-  settingsOpener.appendChild(settingsOpenerText)
-  settingsOpener.addEventListener("click", () => user_pref.open())
-  footer?.appendChild(settingsOpener)
+    const repoInfo = await getPRInfo(user_pref.get("repo"), user_pref.get("token"))
+    console.log(`Remaining Github GraphQL Quota: ${repoInfo.data.rateLimit.remaining}/${repoInfo.data.rateLimit.limit}`)
 
-  const repoInfo = await getPRInfo(user_pref.get("repo"), user_pref.get("token"))
-  console.log(`Remaining Github GraphQL Quota: ${repoInfo.data.rateLimit.remaining}/${repoInfo.data.rateLimit.limit}`)
+    const PRListElements = document.querySelectorAll("div[id^='issue_']") //ids starting with "issue_"
 
-  const PRListElements = document.querySelectorAll("div[id^='issue_']") //ids starting with "issue_"
+    const requireAttention: Element[] = []
+    const doesntRequireAttentionYours: Element[] = []
+    const doesntRequireAttention: Element[] = []
 
-  const requireAttention: Element[] = []
-  const doesntRequireAttentionYours: Element[] = []
-  const doesntRequireAttention: Element[] = []
+    const ignoredCIs = (user_pref.get("ignoredCI") as string).trim().split(",").map(x => x.trim()).filter(x => x != "")
 
-  const ignoredCIs = (user_pref.get("ignoredCI") as string).trim().split(",").map(x => x.trim()).filter(x => x != "")
-
-  PRListElements.forEach(row => {
-    const rowId = row.id.replace("issue_", "")
-    const associatedPRInfo = repoInfo.data.search.nodes.find(x => x.number.toString() == rowId) as (SingularPRInfo | undefined)
-    if (!associatedPRInfo) return
-    const summary: PRSummary = {}
-    const latestReviewInfo = associatedPRInfo.latestNonPendingReviews.nodes.find(x => isCurrentUser(x.author))?.state as (PRReviewState | undefined)
-    summary.byUser = isCurrentUser(associatedPRInfo.author)
-    summary.prState = associatedPRInfo.reviewDecision
-    summary.userHasGivenUpToDateReview = !!latestReviewInfo
-    summary.waitingPrimary = associatedPRInfo.assignees.nodes.some(isCurrentUser) && !latestReviewInfo
-    summary.waitingSecondary = associatedPRInfo.reviewRequests.nodes.some(x => isCurrentUser(x.requestedReviewer))
-    summary.upToDateReview = latestReviewInfo
-    summary.unseenByUser = associatedPRInfo.isReadByViewer
-    summary.noPrimary = associatedPRInfo.assignees.nodes.length == 0;
-    summary.nonTrivialFailedCI = associatedPRInfo.commits.nodes
-      .map(x => extractFailingCIFromCommitInto(x, ignoredCIs))
-      .find(x => x != undefined)?.node.name
-
-
-    summary.requiresAttention = summary.waitingSecondary ||
-      summary.waitingPrimary ||
-      (summary.byUser && summary.prState == "CHANGES_REQUESTED") ||
-      (summary.byUser && summary.noPrimary) ||
-      (summary.byUser && summary.nonTrivialFailedCI != undefined)
+    PRListElements.forEach(row => {
+      const rowId = row.id.replace("issue_", "")
+      const associatedPRInfo = repoInfo.data.search.nodes.find(x => x.number.toString() == rowId) as (SingularPRInfo | undefined)
+      if (!associatedPRInfo) return
+      const summary: PRSummary = {}
+      const latestReviewInfo = associatedPRInfo.latestNonPendingReviews.nodes.find(x => isCurrentUser(x.author))?.state as (PRReviewState | undefined)
+      summary.byUser = isCurrentUser(associatedPRInfo.author)
+      summary.prState = associatedPRInfo.reviewDecision
+      summary.userHasGivenUpToDateReview = !!latestReviewInfo
+      summary.waitingPrimary = associatedPRInfo.assignees.nodes.some(isCurrentUser) && !latestReviewInfo
+      summary.waitingSecondary = associatedPRInfo.reviewRequests.nodes.some(x => isCurrentUser(x.requestedReviewer))
+      summary.upToDateReview = latestReviewInfo
+      summary.unseenByUser = associatedPRInfo.isReadByViewer
+      summary.noPrimary = associatedPRInfo.assignees.nodes.length == 0;
+      summary.nonTrivialFailedCI = associatedPRInfo.commits.nodes
+        .map(x => extractFailingCIFromCommitInto(x, ignoredCIs))
+        .find(x => x != undefined)?.node.name
 
 
-    if (row.children.length < 1) return
-    const rowContentHolder = row.children[0]
-    const badgeHolder = getBadgeHolder()
-    rowContentHolder.insertBefore(badgeHolder, clampedAt(rowContentHolder.children, 3))
+      summary.requiresAttention = summary.waitingSecondary ||
+        summary.waitingPrimary ||
+        (summary.byUser && summary.prState == "CHANGES_REQUESTED") ||
+        (summary.byUser && summary.noPrimary) ||
+        (summary.byUser && summary.nonTrivialFailedCI != undefined)
 
-    const href = row.querySelector("a[id^='issue_']")?.getAttribute("href") ?? ""
 
-    if (summary.byUser && summary.prState == "CHANGES_REQUESTED") badgeHolder.append(getSomeoneRequestedChanges(href))
-    if (summary.byUser && summary.nonTrivialFailedCI) badgeHolder.append(getFailedCIBadge(href, summary.nonTrivialFailedCI))
-    if (summary.noPrimary) badgeHolder.append(getNoPrimaryBadge(href))
-    if (summary.waitingPrimary) badgeHolder.append(getPendingPrimaryBadge(href))
-    if (summary.waitingSecondary) badgeHolder.append(getPendingSecondaryBadge(href))
-    if (summary.upToDateReview == "APPROVED") badgeHolder.append(getYouApprovedBadge(href))
-    if (summary.upToDateReview == "CHANGES_REQUESTED") badgeHolder.append(getYouRequestedChanges(href))
-    if (summary.byUser) badgeHolder.append(getByYouBadge(href))
+      if (row.children.length < 1) return
+      const rowContentHolder = row.children[0]
+      const badgeHolder = getBadgeHolder()
+      rowContentHolder.insertBefore(badgeHolder, clampedAt(rowContentHolder.children, 3))
 
-    row.remove()
-    if (summary.requiresAttention) {
-      requireAttention.push(row)
-    } else if (summary.byUser) {
-      doesntRequireAttentionYours.push(row)
-    } else {
-      doesntRequireAttention.push(row)
+      const href = row.querySelector("a[id^='issue_']")?.getAttribute("href") ?? ""
+
+      if (summary.byUser && summary.prState == "CHANGES_REQUESTED") badgeHolder.append(getSomeoneRequestedChanges(href))
+      if (summary.byUser && summary.nonTrivialFailedCI) badgeHolder.append(getFailedCIBadge(href, summary.nonTrivialFailedCI))
+      if (summary.noPrimary) badgeHolder.append(getNoPrimaryBadge(href))
+      if (summary.waitingPrimary) badgeHolder.append(getPendingPrimaryBadge(href))
+      if (summary.waitingSecondary) badgeHolder.append(getPendingSecondaryBadge(href))
+      if (summary.upToDateReview == "APPROVED") badgeHolder.append(getYouApprovedBadge(href))
+      if (summary.upToDateReview == "CHANGES_REQUESTED") badgeHolder.append(getYouRequestedChanges(href))
+      if (summary.byUser) badgeHolder.append(getByYouBadge(href))
+
+      row.remove()
+      if (summary.requiresAttention) {
+        requireAttention.push(row)
+      } else if (summary.byUser) {
+        doesntRequireAttentionYours.push(row)
+      } else {
+        doesntRequireAttention.push(row)
+      }
+    })
+
+    doesntRequireAttention.reverse()
+    doesntRequireAttentionYours.reverse()
+    requireAttention.reverse()
+
+    const attentionDivider = document.createElement("p")
+    attentionDivider.innerText = "Requires Attention"
+    attentionDivider.classList.add("divider")
+
+    const nonAttentionYoursDivider = document.createElement("p")
+    nonAttentionYoursDivider.style.marginTop = "24px"
+    nonAttentionYoursDivider.innerText = "Other - Yours"
+    nonAttentionYoursDivider.classList.add("divider")
+
+    const nonAttentionDivider = document.createElement("p")
+    nonAttentionDivider.style.marginTop = "24px"
+    nonAttentionDivider.innerText = "Other - Misc"
+    nonAttentionDivider.classList.add("divider")
+
+    const containers = document.getElementsByClassName("js-active-navigation-container")
+    if (containers.length == 0) return
+
+    const PRListHolder = containers[0]
+
+    if (requireAttention.length != 0) {
+      PRListHolder.appendChild(attentionDivider)
+      requireAttention.forEach(x => PRListHolder.appendChild(x))
     }
-  })
 
-  doesntRequireAttention.reverse()
-  doesntRequireAttentionYours.reverse()
-  requireAttention.reverse()
+    if (doesntRequireAttentionYours.length != 0) {
+      PRListHolder.appendChild(nonAttentionYoursDivider)
+      doesntRequireAttentionYours.forEach(x => {
+        x.classList.add("lowPriorityPR")
+        PRListHolder.appendChild(x)
+      })
+    }
 
-  const attentionDivider = document.createElement("p")
-  attentionDivider.innerText = "Requires Attention"
-  attentionDivider.classList.add("divider")
-
-  const nonAttentionYoursDivider = document.createElement("p")
-  nonAttentionYoursDivider.style.marginTop = "24px"
-  nonAttentionYoursDivider.innerText = "Other - Yours"
-  nonAttentionYoursDivider.classList.add("divider")
-
-  const nonAttentionDivider = document.createElement("p")
-  nonAttentionDivider.style.marginTop = "24px"
-  nonAttentionDivider.innerText = "Other - Misc"
-  nonAttentionDivider.classList.add("divider")
-
-  const containers = document.getElementsByClassName("js-active-navigation-container")
-  if (containers.length == 0) return
-
-  const PRListHolder = containers[0]
-
-  if (requireAttention.length != 0) {
-    PRListHolder.appendChild(attentionDivider)
-    requireAttention.forEach(x => PRListHolder.appendChild(x))
-  }
-
-  if (doesntRequireAttentionYours.length != 0) {
-    PRListHolder.appendChild(nonAttentionYoursDivider)
-    doesntRequireAttentionYours.forEach(x => {
-      x.classList.add("lowPriorityPR")
-      PRListHolder.appendChild(x)
-    })
-  }
-
-  if (doesntRequireAttention.length != 0) {
-    PRListHolder.appendChild(nonAttentionDivider)
-    doesntRequireAttention.forEach(x => {
-      x.classList.add("lowPriorityPR")
-      PRListHolder.appendChild(x)
-    })
+    if (doesntRequireAttention.length != 0) {
+      PRListHolder.appendChild(nonAttentionDivider)
+      doesntRequireAttention.forEach(x => {
+        x.classList.add("lowPriorityPR")
+        PRListHolder.appendChild(x)
+      })
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
 
