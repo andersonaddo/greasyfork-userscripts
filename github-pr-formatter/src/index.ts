@@ -5,14 +5,15 @@ import {
   getYouApprovedBadge, getYouRequestedChanges,
   getSomeoneRequestedChanges,
   getNoPrimaryBadge,
-  getFailedCIBadge
+  getFailedCIBadge,
+  getBaseBranchAnnotation
 } from "./badges";
-//Found it easier to just copy the js from the source into this project and reference from it
-import { GM_config } from "./external/GM_Config";
+import { REPO_DEFAULT, TOKEN_DEFAULT, USERNAME_DEFAULT, getStoredValue, initializeStorage, openStoragePanel, storageKeys } from "./storage";
+
 import "./style/main.css";
 import { isPRList, utils } from "github-url-detection"
 
-interface PRSummary {
+export interface PRSummary {
   unseenByUser?: boolean
   byUser?: boolean
   waitingPrimary?: boolean
@@ -23,72 +24,41 @@ interface PRSummary {
   requiresAttention?: boolean
   noPrimary?: boolean
   nonTrivialFailedCI?: string | undefined
+  baseBranch?: {
+    name: string
+    prNumber: number | undefined
+    prUrl: string | undefined
+    prName: string | undefined
+  }
 }
 
-const TOKEN_DEFAULT = "<Token Here>"
-const USERNAME_DEFAULT = "<Username Here>"
-const REPO_DEFAULT = "<Repo Here>"
-const IGNORED_CI_DEFAULT = ""
-
-const user_pref = new GM_config({
-  id: 'MyConfig',
-  title: 'Script Settings (refresh page after saving; you can open this again by going to GitHub footer)',
-  fields: {
-    token:
-    {
-      label: 'Github Personal Access Token (only read-only necessary)',
-      type: 'text',
-      default: TOKEN_DEFAULT
-    },
-    repo:
-    {
-      label: 'Repo name. Used for query: `is:open is:pr involves:@me archived:false repo:xxx`',
-      type: 'text',
-      default: REPO_DEFAULT
-    },
-    username:
-    {
-      label: 'Github Username',
-      type: 'text',
-      default: USERNAME_DEFAULT
-    },
-    ignoredCI: {
-      label: '[Optional] CI test titles to ignore, comma separated',
-      type: 'text',
-      default: IGNORED_CI_DEFAULT
-    }
-  },
-  events: {
-    init: () => {
-      if (user_pref.get("token") == TOKEN_DEFAULT ||
-        user_pref.get("repo") == REPO_DEFAULT ||
-        user_pref.get("username") == USERNAME_DEFAULT) {
-        user_pref.open()
-      } else {
-        organizeRepos()
-        document.addEventListener("soft-nav:end", organizeRepos);
-        document.addEventListener("navigation:end", organizeRepos);
-      }
-
-    }
+initializeStorage(() => {
+  if (getStoredValue(storageKeys.TOKEN) == TOKEN_DEFAULT ||
+    getStoredValue(storageKeys.REPO) == REPO_DEFAULT ||
+    getStoredValue(storageKeys.USERNAME) == USERNAME_DEFAULT) {
+    openStoragePanel()
+  } else {
+    organizeRepos()
+    document.addEventListener("soft-nav:end", organizeRepos);
+    document.addEventListener("navigation:end", organizeRepos);
   }
-}) as any;
+})
+
 
 
 async function organizeRepos() {
-  try {
     if (!isPRList()) return
-    if (!utils.getRepositoryInfo()?.nameWithOwner == user_pref.get("repo")) return;
-    
+    if (!utils.getRepositoryInfo()?.nameWithOwner == getStoredValue(storageKeys.REPO)) return;
+
     const footer = document.querySelector("ul[aria-labelledby*=footer]")
     const settingsOpener = document.createElement("li")
     const settingsOpenerText = document.createElement("p")
     settingsOpenerText.innerText = "Open userscript settings"
     settingsOpener.appendChild(settingsOpenerText)
-    settingsOpener.addEventListener("click", () => user_pref.open())
+    settingsOpener.addEventListener("click", openStoragePanel)
     footer?.appendChild(settingsOpener)
 
-    const repoInfo = await getPRInfo(user_pref.get("repo"), user_pref.get("token"))
+    const repoInfo = await getPRInfo(getStoredValue(storageKeys.REPO), getStoredValue(storageKeys.TOKEN))
     console.log(`Remaining Github GraphQL Quota: ${repoInfo.data.rateLimit.remaining}/${repoInfo.data.rateLimit.limit}`)
 
     const PRListElements = document.querySelectorAll("div[id^='issue_']") //ids starting with "issue_"
@@ -97,7 +67,7 @@ async function organizeRepos() {
     const doesntRequireAttentionYours: Element[] = []
     const doesntRequireAttention: Element[] = []
 
-    const ignoredCIs = (user_pref.get("ignoredCI") as string).trim().split(",").map(x => x.trim()).filter(x => x != "")
+    const ignoredCIs = (getStoredValue(storageKeys.IGNORED_GI) as string).trim().split(",").map(x => x.trim()).filter(x => x != "")
 
     PRListElements.forEach(row => {
       const rowId = row.id.replace("issue_", "")
@@ -116,6 +86,12 @@ async function organizeRepos() {
       summary.nonTrivialFailedCI = associatedPRInfo.commits.nodes
         .map(x => extractFailingCIFromCommitInto(x, ignoredCIs))
         .find(x => x != undefined)?.node.name
+      summary.baseBranch = {
+        name: associatedPRInfo.baseRef.name,
+        prNumber: associatedPRInfo.baseRef.associatedPullRequests.nodes.at(0)?.number,
+        prUrl: associatedPRInfo.baseRef.associatedPullRequests.nodes.at(0)?.url,
+        prName: associatedPRInfo.baseRef.associatedPullRequests.nodes.at(0)?.title
+      }
 
 
       summary.requiresAttention = summary.waitingSecondary ||
@@ -132,6 +108,7 @@ async function organizeRepos() {
 
       const href = row.querySelector("a[id^='issue_']")?.getAttribute("href") ?? ""
 
+      if (summary.baseBranch.name != "master" && summary.baseBranch.name != "main") badgeHolder.appendChild(getBaseBranchAnnotation(summary))
       if (summary.byUser && summary.prState == "CHANGES_REQUESTED") badgeHolder.append(getSomeoneRequestedChanges(href))
       if (summary.byUser && summary.nonTrivialFailedCI) badgeHolder.append(getFailedCIBadge(href, summary.nonTrivialFailedCI))
       if (summary.noPrimary) badgeHolder.append(getNoPrimaryBadge(href))
@@ -194,13 +171,10 @@ async function organizeRepos() {
         PRListHolder.appendChild(x)
       })
     }
-  } catch (e) {
-    console.error(e)
-  }
 }
 
 function isCurrentUser(x: User | null) {
-  return x != null && x.login == user_pref.get("username")
+  return x != null && x.login == getStoredValue(storageKeys.USERNAME)
 }
 
 function clampedAt(arr: HTMLCollection, index: number) {

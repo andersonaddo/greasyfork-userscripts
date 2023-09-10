@@ -32,6 +32,20 @@ export interface SingularPRInfo {
   reviewDecision: OverallPRReviewStatus
   viewerLatestReview: PRReviewState,
   author: User
+  baseRef: {
+    name: string
+    associatedPullRequests: {
+      nodes: Array<{
+        url: string
+        number: number
+        title: string
+        repository: {
+          name: string
+          url: string
+        }
+      }>
+    }
+  }
   assignees: {
     nodes: User[]
   }
@@ -99,6 +113,20 @@ const makeGraphQLQuery = (repo: string) => `{
             ... on User {
               login
               name
+            }
+          }
+          baseRef {
+            name
+            associatedPullRequests(orderBy: {field: CREATED_AT, direction: DESC}, first: 1) {
+              nodes {
+                url
+                number
+                title
+                repository {
+                  name
+                  url
+                }
+              }
             }
           }
           assignees(first: 10) {

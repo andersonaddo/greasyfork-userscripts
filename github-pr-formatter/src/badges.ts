@@ -1,4 +1,6 @@
+import { PRSummary } from "."
 import { completedIconString, inboxIconString, noticeIconString, yoursIconString } from "./icons"
+import { getStoredValue, storageKeys } from "./storage"
 
 interface IconInfo{
     text: string,
@@ -80,7 +82,36 @@ export const getNoPrimaryBadge = (href: string) => makeBadge({
     text: "No Primary"
 }, href)
 
+
+export const getBaseBranchAnnotation = (prInfo: PRSummary) => {
+    const baseRef = document.createElement("a")
+    baseRef.classList.add("lh-default", "d-block", "d-md-inline")
+    baseRef.style.color = "grey"
+    if (prInfo.baseBranch?.prNumber){
+        baseRef.textContent = `(#${prInfo.baseBranch?.prNumber}) ` + baseRef.textContent
+        const url = prInfo.baseBranch?.prUrl || ""
+        baseRef.href = url
+        baseRef.setAttribute("data-hovercard-type", "pull_request")
+        baseRef.setAttribute("data-hovercard-url", url.replace("https://github.com", "") + "/hovercard")
+        baseRef.setAttribute("data-turbo-frame", "repo-content-turbo-frame")
+    }
+    
+    if (prInfo.byUser){
+        if (getStoredValue(storageKeys.USE_BASE_REF_PR_NAME)){
+            baseRef.textContent += `[${truncate(prInfo.baseBranch?.prName ?? "", 18)}] <- `
+        }else{
+            const cleanedBase = prInfo.baseBranch?.name?.split("/").pop() //In my company, branches are formatted as <username>/<branch_name>
+            baseRef.textContent += `[${truncate(cleanedBase ?? "", 18)}] <- `
+        }
+    }else{
+        baseRef.textContent += `[not master] <- `
+    }
+
+    return baseRef
+}
+
 const truncate = (str: string, length: number) => str.length > length ? `${str.substring(0, length)}...` : str;
+
 export const getFailedCIBadge = (href: string, CIName: string) => makeBadge({
     className: "red",
     iconString: noticeIconString,
