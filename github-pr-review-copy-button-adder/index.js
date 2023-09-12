@@ -2,7 +2,7 @@
 // @name     Add filename copy button to the Github PR review comments
 // @description What the title says
 // @namespace ahappyviking
-// @version  1
+// @version  2
 // @grant    none
 // @match 	 https://github.com/*
 // @require  https://unpkg.com/bundled-github-url-detector@1.0.0/index.js
@@ -23,6 +23,7 @@ const addButtons = () => {
     if (!link) return
 
     const button = generateButton(link.textContent, link.offsetWidth)
+    parent.style.position = "relative"
     parent.appendChild(button)
   })
 }

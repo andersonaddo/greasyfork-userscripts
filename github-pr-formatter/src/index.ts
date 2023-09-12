@@ -20,7 +20,7 @@ export interface PRSummary {
   waitingSecondary?: boolean
   userHasGivenUpToDateReview?: boolean
   upToDateReview?: PRReviewState
-  prState?: OverallPRReviewStatus
+  containsOutstandingChangesRequested?: boolean
   requiresAttention?: boolean
   noPrimary?: boolean
   nonTrivialFailedCI?: string | undefined
@@ -73,13 +73,20 @@ async function organizeRepos() {
       const rowId = row.id.replace("issue_", "")
       const associatedPRInfo = repoInfo.data.search.nodes.find(x => x.number.toString() == rowId) as (SingularPRInfo | undefined)
       if (!associatedPRInfo) return
-      const summary: PRSummary = {}
+
       const latestReviewInfo = associatedPRInfo.latestNonPendingReviews.nodes.find(x => isCurrentUser(x.author))?.state as (PRReviewState | undefined)
+      const usersWithReviewRequests = associatedPRInfo.reviewRequests.nodes.map(x => x.requestedReviewer).filter(x => x != null)
+      const containsOutstandingChangesRequestedReview = associatedPRInfo.latestNonPendingReviews.nodes.some(review => {
+        return !usersWithReviewRequests.includes(review.author) && review.state == "CHANGES_REQUESTED"
+      })
+
+
+      const summary: PRSummary = {}
       summary.byUser = isCurrentUser(associatedPRInfo.author)
-      summary.prState = associatedPRInfo.reviewDecision
+      summary.containsOutstandingChangesRequested = containsOutstandingChangesRequestedReview
       summary.userHasGivenUpToDateReview = !!latestReviewInfo
       summary.waitingPrimary = associatedPRInfo.assignees.nodes.some(isCurrentUser) && !latestReviewInfo
-      summary.waitingSecondary = associatedPRInfo.reviewRequests.nodes.some(x => isCurrentUser(x.requestedReviewer))
+      summary.waitingSecondary = usersWithReviewRequests.some(isCurrentUser)
       summary.upToDateReview = latestReviewInfo
       summary.unseenByUser = associatedPRInfo.isReadByViewer
       summary.noPrimary = associatedPRInfo.assignees.nodes.length == 0;
@@ -96,7 +103,7 @@ async function organizeRepos() {
 
       summary.requiresAttention = summary.waitingSecondary ||
         summary.waitingPrimary ||
-        (summary.byUser && summary.prState == "CHANGES_REQUESTED") ||
+        (summary.byUser && summary.containsOutstandingChangesRequested) ||
         (summary.byUser && summary.noPrimary) ||
         (summary.byUser && summary.nonTrivialFailedCI != undefined)
 
@@ -109,7 +116,7 @@ async function organizeRepos() {
       const href = row.querySelector("a[id^='issue_']")?.getAttribute("href") ?? ""
 
       if (summary.baseBranch.name != "master" && summary.baseBranch.name != "main") badgeHolder.appendChild(getBaseBranchAnnotation(summary))
-      if (summary.byUser && summary.prState == "CHANGES_REQUESTED") badgeHolder.append(getSomeoneRequestedChanges(href))
+      if (summary.byUser && summary.containsOutstandingChangesRequested) badgeHolder.append(getSomeoneRequestedChanges(href))
       if (summary.byUser && summary.nonTrivialFailedCI) badgeHolder.append(getFailedCIBadge(href, summary.nonTrivialFailedCI))
       if (summary.noPrimary) badgeHolder.append(getNoPrimaryBadge(href))
       if (summary.waitingPrimary) badgeHolder.append(getPendingPrimaryBadge(href))
