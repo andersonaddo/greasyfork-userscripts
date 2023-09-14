@@ -1,0 +1,1 @@
+I make a lot of userscipts to make my personal and work internet experience less annoying and more convenient. I keep most/all of them here (who knows, some might end up private), and host them on GreasyFork. 
