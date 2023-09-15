@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name     Sentry RUM and Log buttons
-// @version  1
+// @name     Sentry to Datadog RUM and Log buttons
+// @version  2
 // @grant    none
 // @match    https://*.sentry.io/issues/*
 // @license  MIT
@@ -78,19 +78,27 @@ const main = async () => {
         info.time += ` ${(new Date()).getFullYear()} UTC`
         const eventTime = new Date(Date.parse(info.time)).getTime()
         const OFFSET = 300000 //5 minutes in milliseconfs
+        const OFFSET_SHORTER = 60000 //1 minutes in milliseconfs
+        const OFFSET_FOR_HIGHLIGHTING = 30000 //30 seconds in milliseconfs
 
         //Adding inferred RUM button
         const manualRumURL = new URL("https://app.datadoghq.com/rum/sessions?query=%40type%3Aerror&cols=&tab=session&viz=stream&live=false")
         manualRumURL.searchParams.set("query", (manualRumURL.searchParams.get("query") || "") + ` @usr.id:${info.id}`)
         manualRumURL.searchParams.set("from_ts", eventTime - OFFSET )
         manualRumURL.searchParams.set("to_ts", eventTime + OFFSET)
+        //For my "Datadog RUM log highlighting" script
+        manualRumURL.searchParams.set("highlight_from", eventTime - OFFSET_FOR_HIGHLIGHTING )
+        manualRumURL.searchParams.set("highlight_to", eventTime + OFFSET_FOR_HIGHLIGHTING)
         buttonHolder.appendChild(makeButton("Inferred RUM","manual-rum-shortcut", manualRumURL.toString()))
 
         //Adding Logs button
         const logsUrl = new URL("https://app.datadoghq.com/logs?cols=host%2Cservice%2C%40accountName%2C%40args.url&index=&messageDisplay=inline&refresh_mode=sliding&stream_sort=time%2Cdesc&viz=stream&live=false")
         logsUrl.searchParams.set("query", `@usr.id:${info.id}`)
-        logsUrl.searchParams.set("from_ts", eventTime - OFFSET )
-        logsUrl.searchParams.set("to_ts", eventTime + OFFSET)
+        logsUrl.searchParams.set("from_ts", eventTime - OFFSET_SHORTER )
+        logsUrl.searchParams.set("to_ts", eventTime + OFFSET_SHORTER)
+        //For my "Datadog Log log highlighting" script
+        logsUrl.searchParams.set("highlight_from", eventTime - OFFSET_FOR_HIGHLIGHTING )
+        logsUrl.searchParams.set("highlight_to", eventTime + OFFSET_FOR_HIGHLIGHTING)
         buttonHolder.appendChild(makeButton("Relevant Logs","logs-shortcut", logsUrl.toString()))
     }
 }
