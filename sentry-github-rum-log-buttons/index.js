@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     Sentry to Datadog RUM and Log buttons
-// @version  1.2
+// @version  3
 // @grant    none
 // @match    https://*.sentry.io/issues/*
 // @license  MIT
