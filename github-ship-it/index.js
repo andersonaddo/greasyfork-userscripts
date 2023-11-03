@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         "Ship It" GIF button for Github Review
 // @namespace    happyviking
-// @version      1.5.0
+// @version      1.6.0
 // @grant        none
 // @license      MIT
 // @description  Adds a button to Github to add "Let's ship it!" GIFs when reviewing PRs
@@ -25,9 +25,11 @@ const main = () => {
 const attemptGetPRReviewSection = () => {
   const feedbackModal = document.getElementById("review-changes-modal")
   if (!feedbackModal) return null;
-  const buttonPanelQuery = feedbackModal.getElementsByClassName("form-actions")
-  if (buttonPanelQuery.length == 0) return null;
-  return buttonPanel = buttonPanelQuery[0]
+  console.log(feedbackModal)
+  const buttonPanelQuery = feedbackModal.getElementsByClassName("Overlay-footer Overlay-footer--alignEnd")
+  console.log(buttonPanelQuery)
+  if (buttonPanelQuery.length != 2) return null;
+  return buttonPanel = buttonPanelQuery[1]
 }
 
 const attemptGetNewCommentSection = () => {
