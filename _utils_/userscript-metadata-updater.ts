@@ -21,11 +21,11 @@ const GITHUB_ACTION_ENV_VAR = "SHOULD_COMMIT"
 const areSetsEqual = <T>(set1: Set<T>, set2: Set<T>) =>
     set1.size === set2.size && [...set1].every((x) => set2.has(x));
 
-const updateMetadata = async (path: string) => {
+const updateMetadata = async (path: string, targetType: string) => {
     //Reading in the current instances from github
     const instancesRaw = await fetch("https://raw.githubusercontent.com/benbusby/farside/main/services-full.json")
-    const libredditRes = await instancesRaw.json() as Array<Record<string, any>>
-    const instances = libredditRes.find(x => x.type = "libreddit") ?? {}
+    const instancesParsed = await instancesRaw.json() as Array<Record<string, any>>
+    const instances = instancesParsed.find(x => x.type = targetType) ?? {}
     const newInstancesSet = new Set((instances.instances as Array<string>)?.map(x => `// @match ${x}/*`) ?? [])
 
     //Checking out current instance in the metadata block
@@ -60,6 +60,7 @@ const updateMetadata = async (path: string) => {
 }
 
 (async () => {
-    await updateMetadata("../auto-libreddit-quota-redirect.js")
-    await updateMetadata("../libreddit-new-instance-button.js")
+    await updateMetadata("../reddit-userscripts/auto-libreddit-quota-redirect.js", "libreddit")
+    await updateMetadata("../reddit-userscripts/libreddit-new-instance-button.js", "libreddit")
+    await updateMetadata("../tiktok-userscripts/proxitok-error-redirector.js", "proxitok")
 })()
