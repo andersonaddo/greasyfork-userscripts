@@ -25,7 +25,7 @@ const updateMetadata = async (path: string, targetType: string) => {
     //Reading in the current instances from github
     const instancesRaw = await fetch("https://raw.githubusercontent.com/benbusby/farside/main/services-full.json")
     const instancesParsed = await instancesRaw.json() as Array<Record<string, any>>
-    const instances = instancesParsed.find(x => x.type = targetType) ?? {}
+    const instances = instancesParsed.find(x => x.type == targetType) ?? {}
     const newInstancesSet = new Set((instances.instances as Array<string>)?.map(x => `// @match ${x}/*`) ?? [])
 
     //Checking out current instance in the metadata block
