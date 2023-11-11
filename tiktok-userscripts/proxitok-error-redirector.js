@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Proxitok Error Redirector
 // @namespace    happyviking
-// @version      1.0.0
+// @version      1.1.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -9,7 +9,18 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
+// @match https://proxitok.pabloferreiro.es/*
+// @match https://proxitok.pussthecat.org/*
+// @match https://proxitok.privacydev.net/*
 // @match https://tok.habedieeh.re/*
+// @match https://proxitok.esmailelbob.xyz/*
+// @match https://tok.artemislena.eu/*
+// @match https://tok.adminforge.de/*
+// @match https://tik.hostux.net/*
+// @match https://proxitok.lunar.icu/*
+// @match https://proxitok.privacy.com.de/*
+// @match https://tiktok.chauvet.pro/*
+// @match https://cringe.whateveritworks.org/*
 // <<INSTANCES END HERE>>
 
 // ==/UserScript==
