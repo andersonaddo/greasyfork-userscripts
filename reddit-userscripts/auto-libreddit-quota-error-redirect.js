@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Automatic Libreddit Quota Redirector
+// @name         Automatic Libreddit Quota & Error Redirector
 // @namespace    happyviking
 // @version      1.41.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @description  Automatically redirects to another Libreddit instance if the one you're directed to has reached its rate limit/quota.
+// @description  Automatically redirects to another Libreddit instance if the one you're directed to has reached its rate limit/quota or has an error.
 // @icon         https://gitlab.com/uploads/-/system/project/avatar/32545239/libreddit.png
 // @author       HappyViking
 
@@ -53,13 +53,18 @@
 // ==/UserScript==
 
 function main() {
-    const errorMessage = document.getElementById("error")
-    if (!errorMessage) return;
-    if(!errorMessage.querySelector("h1")?.innerHTML.includes("Too Many Requests")) return;
-    const addedMessage = document.createElement("p")
-    addedMessage.textContent = "Redirecting you to new instance..."
-    errorMessage.appendChild(addedMessage)
-    location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+    const errorElement = document.getElementById("error")
+    if (!errorElement) return;
+    const errorMessage = errorElement.querySelector("h1")?.innerHTML
+    if (!errorMessage) return
+    
+    if (errorMessage.includes("Too Many Requests") || 
+        errorMessage.includes("Failed to parse page JSON data")){
+        const addedMessage = document.createElement("p")
+        addedMessage.textContent = "Redirecting you to new instance..."
+        errorElement.appendChild(addedMessage)
+        location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+    }
 }
 
 main()
