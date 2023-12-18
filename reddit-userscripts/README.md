@@ -22,12 +22,6 @@ https://greasyfork.org/en/scripts/470863-automatic-libreddit-quota-redirector is
 
 @match metadata updated frequently by GitHub Actions
 
-# Libreddit instance blacklist
-
-Meant to be used in conjunction with my other Reddit scripts.
-Some libreddit instances are annoyingly unreliable, giving you false 404s and 403s. 
-This auto-redirects you to another instance if you land on one of these instances.
-
 #  Libreddit Quirk Fixer
 
 Fix some quirks of libreddit instances (disabled HLS, disabled NSFW, etc)

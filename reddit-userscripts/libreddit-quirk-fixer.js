@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Libreddit Quirk Fixer
 // @namespace    happyviking
-// @version      1.0.0
+// @version      1.1.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -57,6 +57,24 @@ let preferencesString = ""
 
 function setPreference(name, val) {
     preferencesString += `&${name}=${val}`
+    shouldReloadWithNewPreferences = true
+}
+
+function tryNewInstance(){
+    location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+}
+
+function setCookie(name, val) {
+    const expiry = new Date()
+    expiry.setMonth(expiry.getMonth() + 1)
+    const domainAssociation = "domain=" + window.location.hostname;
+    document.cookie = `${name}=${val};${domainAssociation};expires=${expiry.toUTCString()}`;
+}
+   
+function getCookie(name) {
+    const nameInfo = name + "=";
+    const cookieList = document.cookie.split(';');
+    return cookieList.find(c => c.trim().startsWith(nameInfo))
 }
 
 function fixNSFWGate() {
@@ -69,10 +87,32 @@ function fixNSFWGate() {
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
         nsfwElement.appendChild(addedMessage)
-        location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+        tryNewInstance()
     }else{
         setPreference("show_nsfw", "on")
-        shouldReloadWithNewPreferences = true
+    }
+}
+
+// In case the server doesn't actually serve a proper page, for any reason.
+// Since some might just have something like captcha pages (which are fine), we'll
+// only do this for some known problematic instances
+function fixInvalidPage(){
+    if (["reddit.invak.id", "reddit.simo.sh"].includes(window.location.hostname)){
+        const description = document.querySelector('meta[name="description"]')?.content
+        if (!description || typeof description != "string" || !description.toLowerCase().includes("libreddit")){
+            tryNewInstance()
+        }
+    }
+}
+
+
+function fixDefaultCommentOrder(){
+    if (["lr.artemislena.eu"].includes(window.location.hostname)){
+        const COOKIE_NAME = window.location.hostname + "FIXED_COMMENT_ORDER"
+        if (!getCookie(COOKIE_NAME)){
+            setCookie(COOKIE_NAME, "yes")
+            setPreference("comment_sort", "confidence")
+        }
     }
 }
 
@@ -82,12 +122,13 @@ function fixNoHls() {
         const notifMessage = notification.querySelector("a")?.textContent
         if (notifMessage.trim() === "Enable HLS"){
             setPreference("use_hls", "on")
-            shouldReloadWithNewPreferences = true
             break
         }
     }
 }
 
+fixInvalidPage()
+fixDefaultCommentOrder()
 fixNSFWGate()
 fixNoHls()
 
@@ -97,5 +138,3 @@ if (shouldReloadWithNewPreferences){
     setPreference("use_hls", "on")
     location.replace(`https://${window.location.hostname}/settings/update?${preferencesString}&redirect=${decodeURI(window.location.pathname.slice(1) + window.location.search)}`)
 }
-
-
