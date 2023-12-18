@@ -5,11 +5,12 @@ Mobile reddit website sucks, made this because the existing userscripts I found 
 Not synched up to Greasyforks via web sockets like my other userscripts because I'm lazy tonight.
 
 
-# New Instance Button for Libreddit 
+# Automatic Libreddit Quota & Error Redirector
 
 Libreddit instances are struggling under the new Reddit API limits. Many of them are returning rate limit errors. Use this userscript to easily hop between instances to mitigate this.
+This script also automatically redirects you if the instance has errors parsing API information.
 
-https://greasyfork.org/en/scripts/470864-new-instance-button-for-libreddit/ is set up to automatically pull from this repo (using webhooks) to update.
+https://greasyfork.org/en/scripts/470863-automatic-libreddit-quota-error-redirector is set up to automatically pull from this repo (using webhooks) to update.
 
 @match metadata updated frequently by GitHub Actions
 
@@ -26,3 +27,11 @@ https://greasyfork.org/en/scripts/470863-automatic-libreddit-quota-redirector is
 Meant to be used in conjunction with my other Reddit scripts.
 Some libreddit instances are annoyingly unreliable, giving you false 404s and 403s. 
 This auto-redirects you to another instance if you land on one of these instances.
+
+#  Libreddit Quirk Fixer
+
+Fix some quirks of libreddit instances (disabled HLS, disabled NSFW, etc)
+
+https://greasyfork.org/en/scripts/482514-libreddit-quirk-fixer is set up to automatically pull from this repo (using webhooks) to update.
+
+@match metadata updated frequently by GitHub Actions

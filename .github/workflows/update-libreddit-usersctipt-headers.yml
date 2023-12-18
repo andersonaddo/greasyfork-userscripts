@@ -33,6 +33,7 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add reddit-userscripts/auto-libreddit-quota-error-redirect.js
           git add reddit-userscripts/libreddit-new-instance-button.js
+          git add reddit-userscripts/libreddit-quirk-fixer.js
           git add tiktok-userscripts/proxitok-error-redirector.js
           git commit -m "Update metadata blocks for scripts"
           git push

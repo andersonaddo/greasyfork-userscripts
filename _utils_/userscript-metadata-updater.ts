@@ -62,5 +62,6 @@ const updateMetadata = async (path: string, targetType: string) => {
 (async () => {
     await updateMetadata("../reddit-userscripts/auto-libreddit-quota-error-redirect.js", "libreddit")
     await updateMetadata("../reddit-userscripts/libreddit-new-instance-button.js", "libreddit")
+    await updateMetadata("../reddit-userscripts/libreddit-quirk-fixer.js", "libreddit")
     await updateMetadata("../tiktok-userscripts/proxitok-error-redirector.js", "proxitok")
 })()
