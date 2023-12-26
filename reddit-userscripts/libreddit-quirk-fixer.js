@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Libreddit Quirk Fixer
 // @namespace    happyviking
-// @version      1.1.0
+// @version      1.2.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
