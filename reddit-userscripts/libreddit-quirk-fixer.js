@@ -50,6 +50,8 @@
 // @match https://reddit.baby/*
 // <<INSTANCES END HERE>>
 
+// @match https://geoblock.ste.company/restricted/*
+
 // ==/UserScript==
 
 let shouldReloadWithNewPreferences = false
@@ -60,8 +62,8 @@ function setPreference(name, val) {
     shouldReloadWithNewPreferences = true
 }
 
-function tryNewInstance(){
-    location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+function tryNewInstance(suffix){
+    location.replace('https://farside.link/libreddit/' + suffix ?? (window.location.pathname + window.location.search));
 }
 
 function setCookie(name, val) {
@@ -127,7 +129,15 @@ function fixNoHls() {
     }
 }
 
+function fixGeoFencing() {
+    if (window.location.hostname == "geoblock.ste.company" && window.location.search.includes("reddit")) {
+        const redirect = new URL(location.href).searchParams.get('path')
+        tryNewInstance(redirect)
+    }
+}
+
 fixInvalidPage()
+fixGeoFencing() 
 fixDefaultCommentOrder()
 fixNSFWGate()
 fixNoHls()
@@ -136,5 +146,5 @@ if (shouldReloadWithNewPreferences){
     // We might as well turn on HLS before we realize that it's not enabled and we 
     // have to reload a second time...
     setPreference("use_hls", "on")
-    location.replace(`https://${window.location.hostname}/settings/update?${preferencesString}&redirect=${decodeURI(window.location.pathname.slice(1) + window.location.search)}`)
+    location.replace(`https://${window.location.hostname}/settings/update?${preferencesString}&redirect=${encodeURI(window.location.pathname.slice(1) + window.location.search)}`)
 }
