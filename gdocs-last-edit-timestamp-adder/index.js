@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Restore Revision Time Visual Text in Google Apps
-// @version      1.2
+// @version      1.3
 // @description  Brings back visual last edit text in drive apps due to M3 migration by Google.
 // @author       ZachTheDev and happyviking
 // @match        https://docs.google.com/document*
@@ -10,7 +10,7 @@
 // ==/UserScript==
 
 (function () {
-  const escapeHTMLPolicy = window.trustedTypes ? trustedTypes?.createPolicy("default", {
+  const escapeHTMLPolicy = window.trustedTypes ? trustedTypes?.createPolicy("use-raw-string", {
     createHTML: (string) => string,
   }) : null;
 
