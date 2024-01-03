@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Restore Revision Time Visual Text in Google Apps
-// @version      1.1
+// @version      1.2
 // @description  Brings back visual last edit text in drive apps due to M3 migration by Google.
-// @author       ZachTheDev and andersonaddo
+// @author       ZachTheDev and happyviking
 // @match        https://docs.google.com/document*
 // @match        https://docs.google.com/presentation*
 // @match        https://docs.google.com/spreadsheets*
@@ -10,13 +10,17 @@
 // ==/UserScript==
 
 (function () {
+  const escapeHTMLPolicy = window.trustedTypes ? trustedTypes?.createPolicy("default", {
+    createHTML: (string) => string,
+  }) : null;
+
   function addBackRevisionVisualText() {
     const revisionButtonElement = document.getElementById("docs-revisions-appbarbutton");
     var textFromRevisionButtonElement = revisionButtonElement.getAttribute("ariel-label");
     const menubarElement = document.getElementById("docs-menubar");
     const revisionVisualTextHTML = "<div id=\"revisionVisualText\" class=\"menu-button goog-control goog-inline-block\" role=\"menuitem\" style=\"background-color: transparent;text-decoration: underline;\" data-tooltip=\"Open version history\"></div>";
     const rangeForRevisionVisualTextHTML = document.createRange();
-    const fragmentForRevisionVisualTextHTML = rangeForRevisionVisualTextHTML.createContextualFragment(revisionVisualTextHTML);
+    const fragmentForRevisionVisualTextHTML = rangeForRevisionVisualTextHTML.createContextualFragment(escapeHTMLPolicy?.createHTML(revisionVisualTextHTML) ?? revisionVisualTextHTML);
     menubarElement.appendChild(fragmentForRevisionVisualTextHTML);
     const revisionVisualTextElement = document.getElementById("revisionVisualText");
 
@@ -24,7 +28,7 @@
     function callback() {
       console.log(revisionButtonElement.dataset.tooltip)
       textFromRevisionButtonElement = revisionButtonElement.getAttribute("data-tooltip");
-      revisionVisualTextElement.innerHTML = textFromRevisionButtonElement;
+      revisionVisualTextElement.innerHTML = escapeHTMLPolicy?.createHTML(textFromRevisionButtonElement) ?? textFromRevisionButtonElement;
     }
 
     const observer = new MutationObserver(callback);
