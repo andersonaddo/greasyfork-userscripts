@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Libreddit 
 // @namespace    happyviking
-// @version      1.36.0
+// @version      1.37.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -10,6 +10,7 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
+// @match https://eu.safereddit.com/*
 // @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
 // @match https://libreddit.privacydev.net/*
@@ -22,6 +23,7 @@
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
+// @match https://safereddit.com/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
 // @match https://libreddit.kylrth.com/*
@@ -42,7 +44,6 @@
 // @match https://reddit.simo.sh/*
 // @match https://reddit.smnz.de/*
 // @match https://reddit.utsav2.dev/*
-// @match https://safereddit.com/*
 // @match https://snoo.habedieeh.re/*
 // @match https://libreddit.kutay.dev/*
 // @match https://libreddit.tux.pizza/*
