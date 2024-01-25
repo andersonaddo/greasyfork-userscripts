@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Libreddit 
 // @namespace    happyviking
-// @version      1.37.0
+// @version      1.38.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -23,6 +23,7 @@
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
+// @match https://rl.bloat.cat/*
 // @match https://safereddit.com/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
