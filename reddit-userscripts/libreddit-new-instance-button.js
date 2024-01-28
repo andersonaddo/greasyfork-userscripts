@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Redlib
 // @namespace    happyviking
-// @version      1.34.0
+// @version      1.38.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -10,8 +10,21 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
+// @match https://eu.safereddit.com/*
 // @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
+// @match https://libreddit.privacydev.net/*
+// @match https://libreddit.projectsegfau.lt/*
+// @match https://reddit.idevicehacked.com/*
+// @match https://reddit.invak.id/*
+// @match https://redlib.catsarch.com/*
+// @match https://redlib.freedit.eu/*
+// @match https://redlib.matthew.science/*
+// @match https://redlib.perennialte.ch/*
+// @match https://redlib.tux.pizza/*
+// @match https://redlib.vimmer.dev/*
+// @match https://rl.bloat.cat/*
+// @match https://safereddit.com/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
 // @match https://libreddit.kylrth.com/*
@@ -19,7 +32,6 @@
 // @match https://libreddit.mha.fi/*
 // @match https://libreddit.northboot.xyz/*
 // @match https://libreddit.oxymagnesium.com/*
-// @match https://libreddit.privacydev.net/*
 // @match https://libreddit.pussthecat.org/*
 // @match https://libreddit.spike.codes/*
 // @match https://libreddit.strongthany.cc/*
@@ -29,15 +41,12 @@
 // @match https://lr.artemislena.eu/*
 // @match https://lr.slipfox.xyz/*
 // @match https://r.walkx.fyi/*
-// @match https://reddit.invak.id/*
 // @match https://reddit.rtrace.io/*
 // @match https://reddit.simo.sh/*
 // @match https://reddit.smnz.de/*
 // @match https://reddit.utsav2.dev/*
-// @match https://safereddit.com/*
 // @match https://snoo.habedieeh.re/*
 // @match https://libreddit.kutay.dev/*
-// @match https://libreddit.projectsegfau.lt/*
 // @match https://libreddit.tux.pizza/*
 // @match https://lr.vern.cc/*
 // @match https://r.darklab.sh/*
