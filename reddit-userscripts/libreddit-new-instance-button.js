@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         New Instance Button for Libreddit 
+// @name         New Instance Button for Redlib
 // @namespace    happyviking
 // @version      1.34.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @description  Adds a button to Libreddit instances to redirect to a new instance
+// @description  Adds a button to Redlib (previously Libreddit) instances to redirect to a new instance.
 // @icon         https://gitlab.com/uploads/-/system/project/avatar/32545239/libreddit.png
 // @author       HappyViking
 
@@ -61,7 +61,7 @@ function main() {
     firstDivInNavBar.prepend(newButton)
     newButton.appendChild(document.createTextNode("New Instance"))
     newButton.onclick = () => {
-        location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+        location.replace('https://farside.link/redlib/' + window.location.pathname + window.location.search);
     }
 }
 

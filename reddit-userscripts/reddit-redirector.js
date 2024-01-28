@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Reddit to Libreddit
+// @name         Reddit to Redlib
 // @namespace    happyviking
 // @version      1.1
-// @description  Converts Reddit links to Libreddit links, and replaces old url in browser history. Also works in Firefox Android.
+// @description  Converts Reddit links to Redlib (previously Libreddit) links, and replaces old url in browser history. Also works in Firefox Android.
 // @author       HappyViking
 // @match        *://*.reddit.com/*
 // @exclude      *://*.reddit.com/media*
@@ -23,7 +23,7 @@ function isProperTargetPage(url) {
 }
 
 function getNewUrl(url) {
-    return 'https://farside.link/libreddit' + url.split('reddit.com').pop();
+    return 'https://farside.link/redlib' + url.split('reddit.com').pop();
 }
 
 if (isProperTargetPage(window.location.href)) {

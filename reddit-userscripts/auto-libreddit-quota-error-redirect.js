@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Automatic Libreddit Quota & Error Redirector
+// @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
 // @version      1.41.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @description  Automatically redirects to another Libreddit instance if the one you're directed to has reached its rate limit/quota or has an error.
+// @description  Automatically redirects to another Redlib (previously Libreddit) instance if the one you're directed to has reached its rate limit/quota or has an error.
 // @icon         https://gitlab.com/uploads/-/system/project/avatar/32545239/libreddit.png
 // @author       HappyViking
 
@@ -63,7 +63,7 @@ function main() {
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
         errorElement.appendChild(addedMessage)
-        location.replace('https://farside.link/libreddit/' + window.location.pathname + window.location.search);
+        location.replace('https://farside.link/redlib/' + window.location.pathname + window.location.search);
     }
 }
 

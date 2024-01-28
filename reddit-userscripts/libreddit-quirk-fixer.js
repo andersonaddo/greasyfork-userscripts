@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Libreddit Quirk Fixer
+// @name         Redlib Quirk Fixer
 // @namespace    happyviking
 // @version      1.2.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @description  Fix some quirks of libreddit instances (disabled HLS, disabled NSFW, etc)
+// @description  Fix some quirks of Redlib (previously Libreddit) instances (disabled HLS, disabled NSFW, etc)
 // @icon         https://gitlab.com/uploads/-/system/project/avatar/32545239/libreddit.png
 // @author       HappyViking
 
@@ -63,7 +63,7 @@ function setPreference(name, val) {
 }
 
 function tryNewInstance(suffix){
-    location.replace('https://farside.link/libreddit/' + suffix ?? (window.location.pathname + window.location.search));
+    location.replace('https://farside.link/redlib/' + suffix ?? (window.location.pathname + window.location.search));
 }
 
 function setCookie(name, val) {
@@ -101,7 +101,9 @@ function fixNSFWGate() {
 function fixInvalidPage(){
     if (["reddit.invak.id", "reddit.simo.sh"].includes(window.location.hostname)){
         const description = document.querySelector('meta[name="description"]')?.content
-        if (!description || typeof description != "string" || !description.toLowerCase().includes("libreddit")){
+        if (!description || 
+            typeof description != "string" || 
+            !["libreddit", "redlib"].some(x => description.toLowerCase().includes(x))){
             tryNewInstance()
         }
     }
