@@ -6,6 +6,11 @@ Mobile reddit website sucks, made this because the existing userscripts I found 
 
 Not synched up to Greasyforks via web sockets like my other userscripts because I'm lazy tonight.
 
+# Reddit to Redlib button
+
+Same as Reddit Redirector, but it is triggered by a button and not automatic.
+
+
 
 # Automatic Redlib Quota & Error Redirector
 
