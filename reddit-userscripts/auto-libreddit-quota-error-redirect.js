@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.45.0
+// @version      1.46.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -17,13 +17,16 @@
 // @match https://libreddit.projectsegfau.lt/*
 // @match https://reddit.idevicehacked.com/*
 // @match https://reddit.invak.id/*
-// @match https://redlib.catsarch.com/*
 // @match https://redlib.freedit.eu/*
 // @match https://redlib.matthew.science/*
+// @match https://redlib.nohost.network/*
 // @match https://redlib.perennialte.ch/*
+// @match https://redlib.r4fo.com/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
+// @match https://redlib.xn--hackerhhle-kcb.org/*
 // @match https://rl.bloat.cat/*
+// @match https://redlib.catsarch.com/*
 // @match https://safereddit.com/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
