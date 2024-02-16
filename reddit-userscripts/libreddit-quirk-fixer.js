@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Redlib Quirk Fixer
+// @name         [Buggy] Redlib Quirk Fixer
 // @namespace    happyviking
 // @version      1.7.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @description  Fix some quirks of Redlib (previously Libreddit) instances (disabled HLS, disabled NSFW, etc)
+// @description  Fix some quirks of Redlib (previously Libreddit) instances (disabled HLS, disabled NSFW, etc). Buggy, see README.
 // @icon         https://gitlab.com/uploads/-/system/project/avatar/32545239/libreddit.png
 // @author       HappyViking
 
