@@ -31,7 +31,7 @@ https://greasyfork.org/en/scripts/470863-automatic-redlib-quota-redirector is se
 
 #  Redlib Quirk Fixer
 
-Fix some quirks of Redlib instances (disabled HLS, disabled NSFW, etc). Currently buggy and can cause some instances to just to to the `/undefined` path, which renders nothing.
+Fix some quirks of Redlib instances (disabled HLS, disabled NSFW, etc). Currently buggy and can cause some instances to just go to the `/undefined` path, which renders nothing.
 
 https://greasyfork.org/en/scripts/482514-redlib-quirk-fixer is set up to automatically pull from this repo (using webhooks) to update.
 
