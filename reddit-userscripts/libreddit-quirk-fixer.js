@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Buggy] Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.8.0
+// @version      1.9.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -10,25 +10,26 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
-// @match https://eu.safereddit.com/*
 // @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
 // @match https://libreddit.privacydev.net/*
 // @match https://libreddit.projectsegfau.lt/*
+// @match https://red.ngn.tf/*
 // @match https://reddit.idevicehacked.com/*
 // @match https://reddit.invak.id/*
 // @match https://redlib.catsarch.com/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
-// @match https://redlib.matthew.science/*
 // @match https://redlib.nohost.network/*
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.r4fo.com/*
-// @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
 // @match https://redlib.xn--hackerhhle-kcb.org/*
 // @match https://rl.bloat.cat/*
 // @match https://safereddit.com/*
+// @match https://eu.safereddit.com/*
+// @match https://redlib.matthew.science/*
+// @match https://redlib.tux.pizza/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
 // @match https://libreddit.kylrth.com/*
