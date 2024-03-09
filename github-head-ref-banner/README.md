@@ -1,0 +1,1 @@
+Add banner to github PRs for easier copying of the PR's head ref
