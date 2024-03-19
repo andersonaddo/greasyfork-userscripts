@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.48.0
+// @version      1.49.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -12,24 +12,29 @@
 // <<INSTANCES START HERE>>
 // @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
+// @match https://libreddit.eu.org/*
 // @match https://libreddit.privacydev.net/*
 // @match https://libreddit.projectsegfau.lt/*
+// @match https://lr.n8pjl.ca/*
+// @match https://red.artemislena.eu/*
 // @match https://red.ngn.tf/*
 // @match https://reddit.idevicehacked.com/*
 // @match https://reddit.invak.id/*
+// @match https://reddit.owo.si/*
 // @match https://redlib.catsarch.com/*
+// @match https://redlib.dnfetheus.xyz/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
 // @match https://redlib.nohost.network/*
 // @match https://redlib.perennialte.ch/*
-// @match https://redlib.r4fo.com/*
+// @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
-// @match https://redlib.xn--hackerhhle-kcb.org/*
 // @match https://rl.bloat.cat/*
 // @match https://safereddit.com/*
+// @match https://redlib.r4fo.com/*
+// @match https://redlib.xn--hackerhhle-kcb.org/*
 // @match https://eu.safereddit.com/*
 // @match https://redlib.matthew.science/*
-// @match https://redlib.tux.pizza/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
 // @match https://libreddit.kylrth.com/*
