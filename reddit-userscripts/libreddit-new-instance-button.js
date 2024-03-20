@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Redlib
 // @namespace    happyviking
-// @version      1.42.0
+// @version      1.43.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -16,6 +16,7 @@
 // @match https://libreddit.privacydev.net/*
 // @match https://libreddit.projectsegfau.lt/*
 // @match https://lr.n8pjl.ca/*
+// @match https://r.darrennathanael.com/*
 // @match https://red.artemislena.eu/*
 // @match https://red.ngn.tf/*
 // @match https://reddit.idevicehacked.com/*
@@ -25,12 +26,12 @@
 // @match https://redlib.dnfetheus.xyz/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
-// @match https://redlib.nohost.network/*
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
 // @match https://rl.bloat.cat/*
 // @match https://safereddit.com/*
+// @match https://redlib.nohost.network/*
 // @match https://redlib.r4fo.com/*
 // @match https://redlib.xn--hackerhhle-kcb.org/*
 // @match https://eu.safereddit.com/*
