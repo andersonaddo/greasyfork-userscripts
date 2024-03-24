@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Buggy] Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.12.0
+// @version      1.13.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -24,15 +24,16 @@
 // @match https://reddit.owo.si/*
 // @match https://redlib.catsarch.com/*
 // @match https://redlib.cow.rip/*
+// @match https://redlib.dnfetheus.xyz/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
+// @match https://redlib.kittywi.re/*
 // @match https://redlib.nohost.network/*
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
 // @match https://rl.bloat.cat/*
 // @match https://safereddit.com/*
-// @match https://redlib.dnfetheus.xyz/*
 // @match https://redlib.r4fo.com/*
 // @match https://redlib.xn--hackerhhle-kcb.org/*
 // @match https://eu.safereddit.com/*
