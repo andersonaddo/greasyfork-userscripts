@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Buggy] Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.14.0
+// @version      1.15.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -31,6 +31,7 @@
 // @match https://redlib.nohost.network/*
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.privacyredirect.com/*
+// @match https://redlib.seasi.dev/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
 // @match https://rl.bloat.cat/*
