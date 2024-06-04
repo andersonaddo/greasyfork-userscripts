@@ -8,6 +8,6 @@ module.exports = {
   "run-at": "document-end",
   //The `require` field needs to be here, even if I don't require anything so my dev npm script works
   require: [""],
-  version: "1.7.0",
+  version: "1.8.0",
   license: "MIT"
 };
