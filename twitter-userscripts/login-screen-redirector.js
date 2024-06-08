@@ -15,25 +15,24 @@ function isProperTargetPage(url) {
 }
 
 function getNewUrl() {
-  	let params = new URL(document.location).searchParams;
-  	let name = params.get("redirect_after_login")?.trim();
+    let params = new URL(document.location).searchParams;
+    let name = params.get("redirect_after_login")?.trim();
     return `https://farside.link/nitter/${name ?? ""}`
 }
 
 
 const main = () => {
     if (isProperTargetPage(window.location.href)) {
-    const newUrl = getNewUrl()
-    location.replace(newUrl);
-}
+        const newUrl = getNewUrl()
+        location.replace(newUrl);
+    }
 }
 
 //There are probably cleaner ways to do this but I don't really care, this works and is simple
 let currentPage = location.href;
 main()
-setInterval(() =>
-{
-    if (currentPage != location.href){
+setInterval(() => {
+    if (currentPage != location.href) {
         currentPage = location.href;
         main()
     }
