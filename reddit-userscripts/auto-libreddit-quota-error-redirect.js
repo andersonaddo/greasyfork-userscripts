@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.59.0
+// @version      1.60.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -16,6 +16,7 @@
 // @match https://libreddit.projectsegfau.lt/*
 // @match https://lr.ggtyler.dev/*
 // @match https://lr.n8pjl.ca/*
+// @match https://r.darrennathanael.com/*
 // @match https://red.arancia.click/*
 // @match https://red.artemislena.eu/*
 // @match https://red.ngn.tf/*
@@ -27,23 +28,23 @@
 // @match https://redlib.frontendfriendly.xyz/*
 // @match https://redlib.incogniweb.net/*
 // @match https://redlib.nadeko.net/*
+// @match https://redlib.nirn.quest/*
 // @match https://redlib.nohost.network/*
-// @match https://redlib.perennialte.ch/*
 // @match https://redlib.privacy.com.de/*
 // @match https://redlib.privacyredirect.com/*
 // @match https://redlib.private.coffee/*
+// @match https://redlib.reallyaweso.me/*
 // @match https://redlib.seasi.dev/*
 // @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
 // @match https://rl.bloat.cat/*
 // @match https://rl.rootdo.com/*
+// @match https://redlib.perennialte.ch/*
 // @match https://lr.quitaxd.online/*
 // @match https://redlib.4o1x5.dev/*
 // @match https://redlib.nezumi.party/*
 // @match https://redlib.kittywi.re/*
-// @match https://r.darrennathanael.com/*
 // @match https://reddit.idevicehacked.com/*
-// @match https://redlib.nirn.quest/*
 // @match https://redlib.privacy.deals/*
 // @match https://reddit.owo.si/*
 // @match https://redlib.dnfetheus.xyz/*
