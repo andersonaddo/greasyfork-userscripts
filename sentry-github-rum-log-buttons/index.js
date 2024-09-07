@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name     Sentry to Datadog RUM and Log buttons
+// @name     [Broken] Sentry to Datadog RUM and Log buttons
 // @version  3
 // @grant    none
 // @match    https://*.sentry.io/issues/*
@@ -211,9 +211,8 @@ const attachScript = () => {
 //is supposed to be fast
 let currentPage = location.href;
 attachScript()
-setInterval(() =>
-{
-    if (currentPage != location.href){
+setInterval(() => {
+    if (currentPage != location.href) {
         currentPage = location.href;
         attachScript()
     }

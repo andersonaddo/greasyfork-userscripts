@@ -6,7 +6,7 @@ env:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Daily
+    - cron: "0 0 * * *" # Daily
 
 jobs:
   update-metadata:
@@ -35,5 +35,7 @@ jobs:
           git add reddit-userscripts/libreddit-new-instance-button.js
           git add reddit-userscripts/libreddit-quirk-fixer.js
           git add tiktok-userscripts/proxitok-error-redirector.js
+          git add twitter-userscripts/auto-nitter-quota-error-redirect.js
+          git add twitter-userscripts/nitter-new-instance-button.js
           git commit -m "Update metadata blocks for scripts"
           git push

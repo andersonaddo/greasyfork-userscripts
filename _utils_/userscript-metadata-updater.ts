@@ -38,10 +38,10 @@ const updateMetadata = async (path: string, targetType: string) => {
 
     //Merging the instances in our metadata block with new instances, returning if there's no difference
     const resultantInstancesSet = new Set([...newInstancesSet, ...existingInstancesSet])
-    if (areSetsEqual(resultantInstancesSet, existingInstancesSet)){
+    if (areSetsEqual(resultantInstancesSet, existingInstancesSet)) {
         console.log("No change in instances, aborting early")
         return
-    }else{
+    } else {
         console.log("Change in instances detected! Commiting change")
     }
     const resultantInstancesString = Array.from(resultantInstancesSet).join("\n")
@@ -53,7 +53,7 @@ const updateMetadata = async (path: string, targetType: string) => {
     const originalVersionRegex = fileContent.match(versionRegex)
     if (!originalVersionRegex) throw new Error("Couldn't find version information")
     const newVersion = inc(coerce(originalVersionRegex[1]), "minor")
-    fileContent = fileContent.replace(originalVersionRegex[0], originalVersionRegex[0].replace(originalVersionRegex[1], newVersion));  
+    fileContent = fileContent.replace(originalVersionRegex[0], originalVersionRegex[0].replace(originalVersionRegex[1], newVersion));
     core.exportVariable(GITHUB_ACTION_ENV_VAR, "YES")
 
     writeFileSync(path, fileContent)
@@ -64,4 +64,6 @@ const updateMetadata = async (path: string, targetType: string) => {
     await updateMetadata("../reddit-userscripts/libreddit-new-instance-button.js", "redlib")
     await updateMetadata("../reddit-userscripts/libreddit-quirk-fixer.js", "redlib")
     await updateMetadata("../tiktok-userscripts/proxitok-error-redirector.js", "proxitok")
+    await updateMetadata("../twitter-userscripts/auto-nitter-quota-error-redirect.js", "nitter")
+    await updateMetadata("../twitter-userscripts/nitter-new-instance-button.js", "nitter")
 })()
