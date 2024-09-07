@@ -1,17 +1,18 @@
 // ==UserScript==
-// @name         Twitter Login Blocker to Nitter
+// @name         Twitter/X Login Blocker to Nitter
 // @namespace    happyviking
-// @version      2.0
-// @description  Converts Twitter login flow redirects to Nitter links, and replaces old url in browser history. Also works in Firefox Android.
+// @version      3.0
+// @description  Converts Twitter/X login flow redirects to Nitter links, and replaces old url in browser history. Also works in Firefox Android.
 // @author       HappyViking
-// @match	     *://*.twitter.com/*
+// @match	     *://*.twitter.com/i/flow/*
+// @match	     *://*.x.com/i/flow/*
 // @grant        none
 // @run-at       document-start
 // @license      MIT
 // ==/UserScript==
 
 function isProperTargetPage(url) {
-    return !!url.match(/^(|http(s?):\/\/)(.*\.)?twitter.com\/i\/flow\/login(.*|$)/gim);
+    return !!url.match(/^(|http(s?):\/\/)(.*\.)?twitter.com\/i\/flow\/login(.*|$)/gim) || !!url.match(/^(|http(s?):\/\/)(.*\.)?x.com\/i\/flow\/login(.*|$)/gim)
 }
 
 function getNewUrl() {
