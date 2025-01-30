@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Nitter Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.2.0
+// @version      1.3.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -13,6 +13,7 @@
 // @match https://lightbrd.com/*
 // @match https://nitter.poast.org/*
 // @match https://nitter.privacydev.net/*
+// @match https://nitter.space/*
 // @match https://xcancel.com/*
 // @match https://nitter.lucabased.xyz/*
 // <<INSTANCES END HERE>>
