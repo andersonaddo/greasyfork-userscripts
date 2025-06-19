@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Nitter
 // @namespace    happyviking
-// @version      1.60.0
+// @version      1.61.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -17,6 +17,7 @@
 // @match https://nitter.privacyredirect.com/*
 // @match https://nitter.space/*
 // @match https://nitter.tiekoetter.com/*
+// @match https://nuku.trabun.org/*
 // @match https://xcancel.com/*
 // @match https://nitter.privacydev.net/*
 // @match https://nitter.lucabased.xyz/*
