@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.60.0
+// @version      1.61.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -10,9 +10,24 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
+// @match https://eu.safereddit.com/*
+// @match https://libreddit.diffraction.dev/*
+// @match https://libreddit.privacydev.net/*
+// @match https://lr.ptr.moe/*
+// @match https://reddit.nerdvpn.de/*
+// @match https://reddit.rtrace.io/*
+// @match https://redlib.catsarch.com/*
+// @match https://redlib.minihoot.site/*
+// @match https://redlib.nadeko.net/*
+// @match https://redlib.perennialte.ch/*
+// @match https://redlib.privacyredirect.com/*
+// @match https://redlib.privadency.com/*
+// @match https://redlib.r4fo.com/*
+// @match https://redlib.scanash.xyz/*
+// @match https://redlib.tux.pizza/*
+// @match https://rl.blitzw.in/*
 // @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
-// @match https://libreddit.privacydev.net/*
 // @match https://libreddit.projectsegfau.lt/*
 // @match https://lr.ggtyler.dev/*
 // @match https://lr.n8pjl.ca/*
@@ -20,26 +35,20 @@
 // @match https://red.arancia.click/*
 // @match https://red.artemislena.eu/*
 // @match https://red.ngn.tf/*
-// @match https://reddit.nerdvpn.de/*
 // @match https://redlib.baczek.me/*
-// @match https://redlib.catsarch.com/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
 // @match https://redlib.frontendfriendly.xyz/*
 // @match https://redlib.incogniweb.net/*
-// @match https://redlib.nadeko.net/*
 // @match https://redlib.nirn.quest/*
 // @match https://redlib.nohost.network/*
 // @match https://redlib.privacy.com.de/*
-// @match https://redlib.privacyredirect.com/*
 // @match https://redlib.private.coffee/*
 // @match https://redlib.reallyaweso.me/*
 // @match https://redlib.seasi.dev/*
-// @match https://redlib.tux.pizza/*
 // @match https://redlib.vimmer.dev/*
 // @match https://rl.bloat.cat/*
 // @match https://rl.rootdo.com/*
-// @match https://redlib.perennialte.ch/*
 // @match https://lr.quitaxd.online/*
 // @match https://redlib.4o1x5.dev/*
 // @match https://redlib.nezumi.party/*
@@ -52,9 +61,7 @@
 // @match https://libreddit.eu.org/*
 // @match https://reddit.invak.id/*
 // @match https://redlib.cow.rip/*
-// @match https://redlib.r4fo.com/*
 // @match https://redlib.xn--hackerhhle-kcb.org/*
-// @match https://eu.safereddit.com/*
 // @match https://redlib.matthew.science/*
 // @match https://libreddit.freedit.eu/*
 // @match https://libreddit.hu/*
@@ -72,7 +79,6 @@
 // @match https://lr.artemislena.eu/*
 // @match https://lr.slipfox.xyz/*
 // @match https://r.walkx.fyi/*
-// @match https://reddit.rtrace.io/*
 // @match https://reddit.simo.sh/*
 // @match https://reddit.smnz.de/*
 // @match https://reddit.utsav2.dev/*
