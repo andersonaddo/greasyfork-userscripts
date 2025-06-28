@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Buggy] Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.22.0
+// @version      1.23.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -10,22 +10,27 @@
 // @author       HappyViking
 
 // <<INSTANCES START HERE>>
-// @match https://eu.safereddit.com/*
 // @match https://libreddit.diffraction.dev/*
-// @match https://libreddit.privacydev.net/*
-// @match https://lr.ptr.moe/*
+// @match https://red.ngn.tf/*
 // @match https://reddit.nerdvpn.de/*
 // @match https://reddit.rtrace.io/*
+// @match https://redlib.4o1x5.dev/*
 // @match https://redlib.catsarch.com/*
 // @match https://redlib.minihoot.site/*
-// @match https://redlib.nadeko.net/*
 // @match https://redlib.perennialte.ch/*
-// @match https://redlib.privacyredirect.com/*
 // @match https://redlib.privadency.com/*
+// @match https://redlib.thebunny.zone/*
+// @match https://rl.blitzw.in/*
+// @match https://rl.bloat.cat/*
+// @match https://safereddit.com/*
+// @match https://eu.safereddit.com/*
+// @match https://libreddit.privacydev.net/*
+// @match https://lr.ptr.moe/*
+// @match https://redlib.nadeko.net/*
+// @match https://redlib.privacyredirect.com/*
 // @match https://redlib.r4fo.com/*
 // @match https://redlib.scanash.xyz/*
 // @match https://redlib.tux.pizza/*
-// @match https://rl.blitzw.in/*
 // @match https://l.opnxng.com/*
 // @match https://libreddit.bus-hit.me/*
 // @match https://libreddit.projectsegfau.lt/*
@@ -34,7 +39,6 @@
 // @match https://r.darrennathanael.com/*
 // @match https://red.arancia.click/*
 // @match https://red.artemislena.eu/*
-// @match https://red.ngn.tf/*
 // @match https://redlib.baczek.me/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
@@ -47,17 +51,14 @@
 // @match https://redlib.reallyaweso.me/*
 // @match https://redlib.seasi.dev/*
 // @match https://redlib.vimmer.dev/*
-// @match https://rl.bloat.cat/*
 // @match https://rl.rootdo.com/*
 // @match https://lr.quitaxd.online/*
-// @match https://redlib.4o1x5.dev/*
 // @match https://redlib.nezumi.party/*
 // @match https://redlib.kittywi.re/*
 // @match https://reddit.idevicehacked.com/*
 // @match https://redlib.privacy.deals/*
 // @match https://reddit.owo.si/*
 // @match https://redlib.dnfetheus.xyz/*
-// @match https://safereddit.com/*
 // @match https://libreddit.eu.org/*
 // @match https://reddit.invak.id/*
 // @match https://redlib.cow.rip/*
