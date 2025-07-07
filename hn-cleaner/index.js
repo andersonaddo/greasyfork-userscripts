@@ -3,7 +3,7 @@
 // @match https://news.ycombinator.com/
 // @match https://news.ycombinator.com/?p=*
 // @match https://news.ycombinator.com/front*
-// @version  2.1
+// @version  2.2
 // @grant    none
 // @namespace ahappyviking
 // @license MIT
@@ -12,7 +12,7 @@
 // ==/UserScript==
 
 let hiddenDomains = ["dailymail.co.uk", "cbsnews.com"]
-let hiddenTitleKeywords = ["chatgpt", "gpt"] //These should stay lowercase...
+let hiddenTitleKeywords = ["chatgpt", "gpt", "llm", "ai-", "claude", "ai ", " agi "] //These should stay lowercase...
 
 function hncleaner_main() {
 
@@ -65,7 +65,7 @@ function hncleaner_addBlockCount(blockCount) {
     text.innerText = `Hidden posts: ${blockCount}`
     text.style.color = "grey"
     text.style.fontSize = "10px"
-    document.getElementById("pagespace")?.after(text)
+    document.getElementById("bigbox")?.before(text)
 }
 
 hncleaner_main()
