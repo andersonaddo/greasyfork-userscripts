@@ -101,16 +101,30 @@
 
 // ==/UserScript==
 
+function isInAnubis() {
+    return !!document.getElementById("anubis_version")
+}
+
 function main() {
-    const navBar = document.querySelector('nav');
-    if (!navBar) return
-    const firstDivInNavBar = navBar.querySelector("div")
+    let parent = null
+    if (isInAnubis()) {
+        const mainSection = document.getElementsByTagName("main").item(0)
+        if (!mainSection) return
+        parent = mainSection
+    } else {
+        const navBar = document.querySelector('nav');
+        if (!navBar) return
+        const firstDivInNavBar = navBar.querySelector("div")
+        parent = firstDivInNavBar
+    }
+
     const newButton = document.createElement("button")
-    firstDivInNavBar.prepend(newButton)
+    parent.prepend(newButton)
     newButton.appendChild(document.createTextNode("New Instance"))
     newButton.onclick = () => {
         location.replace('https://farside.link/redlib/' + window.location.pathname + window.location.search);
     }
+
 }
 
 main()  
