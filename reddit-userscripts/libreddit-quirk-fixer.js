@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Buggy] Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.24.0
+// @version      1.25.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -102,6 +102,38 @@
 
 // ==/UserScript==
 
+function tryNewInstance(suffix) {
+    location.replace('https://farside.link/redlib/' + suffix ?? (window.location.pathname + window.location.search));
+}
+
+// ************************************************
+
+function setCookie(name, val) {
+    const expiry = new Date()
+    expiry.setMonth(expiry.getMonth() + 1)
+    const domainAssociation = "domain=" + window.location.hostname;
+    document.cookie = `${name}=${val};${domainAssociation};expires=${expiry.toUTCString()}`;
+}
+
+function getCookie(name) {
+    const nameInfo = name + "=";
+    const cookieList = document.cookie.split(';');
+    return cookieList.find(c => c.trim().startsWith(nameInfo))
+}
+
+
+function fixDefaultCommentOrder() {
+    if (["lr.artemislena.eu"].includes(window.location.hostname)) {
+        const COOKIE_NAME = window.location.hostname + "FIXED_COMMENT_ORDER"
+        if (!getCookie(COOKIE_NAME)) {
+            setCookie(COOKIE_NAME, "yes")
+            setPreference("comment_sort", "confidence")
+        }
+    }
+}
+
+// ************************************************
+
 let shouldReloadWithNewPreferences = false
 let preferencesString = ""
 
@@ -110,74 +142,52 @@ function setPreference(name, val) {
     shouldReloadWithNewPreferences = true
 }
 
-function tryNewInstance(suffix){
-    location.replace('https://farside.link/redlib/' + suffix ?? (window.location.pathname + window.location.search));
-}
-
-function setCookie(name, val) {
-    const expiry = new Date()
-    expiry.setMonth(expiry.getMonth() + 1)
-    const domainAssociation = "domain=" + window.location.hostname;
-    document.cookie = `${name}=${val};${domainAssociation};expires=${expiry.toUTCString()}`;
-}
-   
-function getCookie(name) {
-    const nameInfo = name + "=";
-    const cookieList = document.cookie.split(';');
-    return cookieList.find(c => c.trim().startsWith(nameInfo))
-}
 
 function fixNSFWGate() {
     const nsfwElement = document.getElementById("nsfw_landing")
     if (!nsfwElement) return;
     const nsfwInfo = nsfwElement.querySelector("p")?.innerHTML
     if (!nsfwInfo) return
-    
-    if (nsfwInfo.includes("SFW-only")){
+
+    if (nsfwInfo.includes("SFW-only")) {
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
         nsfwElement.appendChild(addedMessage)
         tryNewInstance()
-    }else{
+    } else {
         setPreference("show_nsfw", "on")
-    }
-}
-
-// In case the server doesn't actually serve a proper page, for any reason.
-// Since some might just have something like captcha pages (which are fine), we'll
-// only do this for some known problematic instances
-function fixInvalidPage(){
-    if (["reddit.invak.id", "reddit.simo.sh"].includes(window.location.hostname)){
-        const description = document.querySelector('meta[name="description"]')?.content
-        if (!description || 
-            typeof description != "string" || 
-            !["libreddit", "redlib"].some(x => description.toLowerCase().includes(x))){
-            tryNewInstance()
-        }
-    }
-}
-
-
-function fixDefaultCommentOrder(){
-    if (["lr.artemislena.eu"].includes(window.location.hostname)){
-        const COOKIE_NAME = window.location.hostname + "FIXED_COMMENT_ORDER"
-        if (!getCookie(COOKIE_NAME)){
-            setCookie(COOKIE_NAME, "yes")
-            setPreference("comment_sort", "confidence")
-        }
     }
 }
 
 function fixNoHls() {
     const notifications = document.getElementsByClassName("post_notification")
-    for (const notification of notifications){
+    for (const notification of notifications) {
         const notifMessage = notification.querySelector("a")?.textContent
-        if (notifMessage.trim() === "Enable HLS"){
+        if (notifMessage.trim() === "Enable HLS") {
             setPreference("use_hls", "on")
             break
         }
     }
 }
+
+
+// ************************************************
+
+
+// In case the server doesn't actually serve a proper page, for any reason.
+// Since some might just have something like captcha pages (which are fine), we'll
+// only do this for some known problematic instances
+function fixInvalidPage() {
+    if (["reddit.invak.id", "reddit.simo.sh"].includes(window.location.hostname)) {
+        const description = document.querySelector('meta[name="description"]')?.content
+        if (!description ||
+            typeof description != "string" ||
+            !["libreddit", "redlib"].some(x => description.toLowerCase().includes(x))) {
+            tryNewInstance()
+        }
+    }
+}
+
 
 function fixGeoFencing() {
     if (window.location.hostname == "geoblock.ste.company" && window.location.search.includes("reddit")) {
@@ -186,13 +196,45 @@ function fixGeoFencing() {
     }
 }
 
-fixInvalidPage()
-fixGeoFencing() 
-fixDefaultCommentOrder()
-fixNSFWGate()
-fixNoHls()
+// ************************************************
 
-if (shouldReloadWithNewPreferences){
+function isInAnubis() {
+    return !!document.getElementById("anubis_version")
+}
+
+function redirectIfStillInAnubis(timeout) {
+    setTimeout(() => {
+        if (isInAnubis()) tryNewInstance()
+    }, timeout)
+}
+
+// https://github.com/TecharoHQ/anubis
+function fixBadAnubisCheck() {
+    if (["rl.blitzw.in"].includes(window.location.hostname)) {
+        redirectIfStillInAnubis(4000)
+    } else {
+        redirectIfStillInAnubis(6000)
+    }
+
+}
+
+// ************************************************
+
+
+// Basic Checks
+fixInvalidPage()
+fixBadAnubisCheck()
+fixGeoFencing()
+
+// More complicated Checks
+// Commenting out for now, buggy
+// fixDefaultCommentOrder()
+// fixNSFWGate()
+// fixNoHls()
+
+
+
+if (shouldReloadWithNewPreferences) {
     // We might as well turn on HLS before we realize that it's not enabled and we 
     // have to reload a second time...
     setPreference("use_hls", "on")
