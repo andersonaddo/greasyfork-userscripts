@@ -100,14 +100,31 @@
 
 // ==/UserScript==
 
-function main() {
+const checkForRedlibError = () => {
     const errorElement = document.getElementById("error")
-    if (!errorElement) return;
+    if (!errorElement) return false;
     const errorMessage = errorElement.querySelector("h1")?.innerHTML
-    if (!errorMessage) return
-    
-    if (errorMessage.includes("Too Many Requests") || 
-        errorMessage.includes("Failed to parse page JSON data")){
+    if (!errorMessage) return false;
+
+    const hasError = errorMessage.includes("Too Many Requests") ||
+        errorMessage.includes("Failed to parse page JSON data")
+
+    if (hasError) return errorElement
+    return null
+}
+
+const checkForNginxError = () => {
+    const errorElement = document.getElementsByTagName("h1").item(0)
+    if (!errorElement) return false
+    const hasError = errorElement.innerHTML === "502 Bad Gateway"
+
+    if (hasError) return errorElement
+    return null
+}
+
+function main() {
+    const errorElement = checkForNginxError() ?? checkForRedlibError()
+    if (errorElement) {
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
         errorElement.appendChild(addedMessage)
