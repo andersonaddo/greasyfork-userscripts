@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.63.0
+// @version      1.64.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
