@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.64.0
+// @version      1.65.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -116,7 +116,9 @@ const checkForRedlibError = () => {
 const checkForNginxError = () => {
     const errorElement = document.getElementsByTagName("h1").item(0)
     if (!errorElement) return false
-    const hasError = errorElement.innerHTML === "502 Bad Gateway"
+
+    const hasError = errorElement.innerHTML === "502 Bad Gateway" ||
+        errorElement.innerHTML === "503 Service Temporarily Unavailable"
 
     if (hasError) return errorElement
     return null
