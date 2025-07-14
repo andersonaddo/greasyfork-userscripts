@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Redlib
 // @namespace    happyviking
-// @version      1.56.0
+// @version      1.57.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -11,24 +11,26 @@
 
 // <<INSTANCES START HERE>>
 // @match https://libreddit.diffraction.dev/*
-// @match https://red.ngn.tf/*
+// @match https://libreddit.privacydev.net/*
+// @match https://red.artemislena.eu/*
+// @match https://reddit.adminforge.de/*
 // @match https://reddit.nerdvpn.de/*
 // @match https://reddit.rtrace.io/*
+// @match https://redlib.catsarch.com/*
 // @match https://redlib.minihoot.site/*
 // @match https://redlib.orangenet.cc/*
 // @match https://redlib.perennialte.ch/*
 // @match https://redlib.privacyredirect.com/*
+// @match https://redlib.privadency.com/*
 // @match https://redlib.r4fo.com/*
-// @match https://redlib.scanash.xyz/*
 // @match https://redlib.thebunny.zone/*
 // @match https://rl.blitzw.in/*
-// @match https://rl.bloat.cat/*
 // @match https://safereddit.com/*
+// @match https://red.ngn.tf/*
+// @match https://redlib.scanash.xyz/*
+// @match https://rl.bloat.cat/*
 // @match https://redlib.4o1x5.dev/*
-// @match https://redlib.catsarch.com/*
-// @match https://redlib.privadency.com/*
 // @match https://eu.safereddit.com/*
-// @match https://libreddit.privacydev.net/*
 // @match https://lr.ptr.moe/*
 // @match https://redlib.nadeko.net/*
 // @match https://redlib.tux.pizza/*
@@ -39,7 +41,6 @@
 // @match https://lr.n8pjl.ca/*
 // @match https://r.darrennathanael.com/*
 // @match https://red.arancia.click/*
-// @match https://red.artemislena.eu/*
 // @match https://redlib.baczek.me/*
 // @match https://redlib.ducks.party/*
 // @match https://redlib.freedit.eu/*
