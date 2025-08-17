@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         [Buggy] Redlib Quirk Fixer
+// @name         Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.26.0
+// @version      1.27.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -104,7 +104,7 @@
 // ==/UserScript==
 
 function tryNewInstance(suffix) {
-    location.replace('https://farside.link/redlib/' + suffix ?? (window.location.pathname + window.location.search));
+    location.replace('https://farside.link/redlib/' + (suffix ?? (window.location.pathname + window.location.search)));
 }
 
 // ************************************************
@@ -143,6 +143,12 @@ function setPreference(name, val) {
     shouldReloadWithNewPreferences = true
 }
 
+
+function fixNSFWBlurred() {
+    if (document.querySelectorAll(".post_blurred").length) {
+        setPreference("blur_nsfw", "off")
+    }
+}
 
 function fixNSFWGate() {
     const nsfwElement = document.getElementById("nsfw_landing")
@@ -212,9 +218,9 @@ function redirectIfStillInAnubis(timeout) {
 // https://github.com/TecharoHQ/anubis
 function fixBadAnubisCheck() {
     if (["rl.blitzw.in"].includes(window.location.hostname)) {
-        redirectIfStillInAnubis(4000)
+        redirectIfStillInAnubis(500)
     } else {
-        redirectIfStillInAnubis(6000)
+        redirectIfStillInAnubis(7000)
     }
 
 }
@@ -226,12 +232,13 @@ function fixBadAnubisCheck() {
 fixInvalidPage()
 fixBadAnubisCheck()
 fixGeoFencing()
+fixNSFWGate()
+fixNSFWBlurred()
+fixNoHls()
 
 // More complicated Checks
 // Commenting out for now, buggy
 // fixDefaultCommentOrder()
-// fixNSFWGate()
-// fixNoHls()
 
 
 
@@ -239,5 +246,7 @@ if (shouldReloadWithNewPreferences) {
     // We might as well turn on HLS before we realize that it's not enabled and we 
     // have to reload a second time...
     setPreference("use_hls", "on")
+    // Same for blur NSFW
+    setPreference("blur_nsfw", "off")
     location.replace(`https://${window.location.hostname}/settings/update?${preferencesString}&redirect=${encodeURI(window.location.pathname.slice(1) + window.location.search)}`)
 }
