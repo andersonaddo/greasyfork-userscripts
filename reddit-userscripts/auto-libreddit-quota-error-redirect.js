@@ -101,19 +101,37 @@
 
 // ==/UserScript==
 
+const checkForUnexpectedPage = () => {
+    const isInNormalPage = !!document.querySelector('nav');
+    const isInAnubis = !!document.getElementById("anubis_version")
+    const isCloudflarePage = document.title.includes('Just a moment') ||
+        document.querySelector('#challenge-running') !== null;
+
+    if (!isInAnubis && !isCloudflarePage && !isInNormalPage) {
+        return document.body
+    }
+    return null
+
+}
+
 const checkForRedlibError = () => {
     const errorElement = document.getElementById("error")
     if (!errorElement) return false;
     const errorMessage = errorElement.querySelector("h1")?.innerHTML
     if (!errorMessage) return false;
 
-    const hasError = errorMessage.includes("Too Many Requests") ||
-        errorMessage.includes("Failed to parse page JSON data")
+    const message = errorMessage.toLowerCase()
+
+    const hasError =
+        message.includes("too many requests") ||
+        message.includes("failed to parse page json data") ||
+        message.includes("quota")
 
     if (hasError) return errorElement
     return null
 }
 
+// Probably isn't needed because of checkForUnexpectedPage now
 const checkForNginxError = () => {
     const errorElement = document.getElementsByTagName("h1").item(0)
     if (!errorElement) return false
@@ -126,7 +144,7 @@ const checkForNginxError = () => {
 }
 
 function main() {
-    const errorElement = checkForNginxError() ?? checkForRedlibError()
+    const errorElement = checkForUnexpectedPage() ?? checkForNginxError() ?? checkForRedlibError()
     if (errorElement) {
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."

@@ -5,7 +5,7 @@
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @description  Fix some quirks of Redlib (previously Libreddit) instances (disabled HLS, disabled NSFW, etc). Buggy, see README.
+// @description  Fix some quirks of Redlib (previously Libreddit) instances (disabled HLS, disabled NSFW, etc)
 // @icon         https://gitlab.com/uploads/-/system/project/avatar/32545239/libreddit.png
 // @author       HappyViking
 
@@ -124,7 +124,7 @@ function getCookie(name) {
 
 
 function fixDefaultCommentOrder() {
-    if (["lr.artemislena.eu"].includes(window.location.hostname)) {
+    if (["lr.artemislena.eu", "red.artemislena.eu"].includes(window.location.hostname)) {
         const COOKIE_NAME = window.location.hostname + "FIXED_COMMENT_ORDER"
         if (!getCookie(COOKIE_NAME)) {
             setCookie(COOKIE_NAME, "yes")
@@ -177,32 +177,6 @@ function fixNoHls() {
     }
 }
 
-
-// ************************************************
-
-
-// In case the server doesn't actually serve a proper page, for any reason.
-// Since some might just have something like captcha pages (which are fine), we'll
-// only do this for some known problematic instances
-function fixInvalidPage() {
-    if (["reddit.invak.id", "reddit.simo.sh"].includes(window.location.hostname)) {
-        const description = document.querySelector('meta[name="description"]')?.content
-        if (!description ||
-            typeof description != "string" ||
-            !["libreddit", "redlib"].some(x => description.toLowerCase().includes(x))) {
-            tryNewInstance()
-        }
-    }
-}
-
-
-function fixGeoFencing() {
-    if (window.location.hostname == "geoblock.ste.company" && window.location.search.includes("reddit")) {
-        const redirect = new URL(location.href).searchParams.get('path')
-        tryNewInstance(redirect)
-    }
-}
-
 // ************************************************
 
 function isInAnubis() {
@@ -229,16 +203,13 @@ function fixBadAnubisCheck() {
 
 
 // Basic Checks
-fixInvalidPage()
 fixBadAnubisCheck()
-fixGeoFencing()
 fixNSFWGate()
 fixNSFWBlurred()
 fixNoHls()
 
 // More complicated Checks
-// Commenting out for now, buggy
-// fixDefaultCommentOrder()
+fixDefaultCommentOrder()
 
 
 
