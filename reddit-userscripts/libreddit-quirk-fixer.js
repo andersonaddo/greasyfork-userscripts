@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.27.0
+// @version      1.28.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
