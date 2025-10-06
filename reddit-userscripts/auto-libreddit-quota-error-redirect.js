@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.67.0
+// @version      1.68.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -104,10 +104,11 @@
 const checkForUnexpectedPage = () => {
     const isInNormalPage = !!document.querySelector('nav');
     const isInAnubis = !!document.getElementById("anubis_version")
+    const isMediaPreviewPage = window.location.pathname.includes("preview")
     const isCloudflarePage = document.title.includes('Just a moment') ||
         document.querySelector('#challenge-running') !== null;
 
-    if (!isInAnubis && !isCloudflarePage && !isInNormalPage) {
+    if (!isInAnubis && !isCloudflarePage && !isInNormalPage && !isMediaPreviewPage) {
         return document.body
     }
     return null
@@ -125,7 +126,7 @@ const checkForRedlibError = () => {
     const hasError =
         message.includes("too many requests") ||
         message.includes("failed to parse page json data") ||
-        message.includes("quota")
+        message.includes("rate limit")
 
     if (hasError) return errorElement
     return null
