@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.68.0
+// @version      1.69.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -104,15 +104,32 @@
 const checkForUnexpectedPage = () => {
     const isInNormalPage = !!document.querySelector('nav');
     const isInAnubis = !!document.getElementById("anubis_version")
-    const isMediaPreviewPage = window.location.pathname.includes("preview")
+    const isMediaPreviewPage = window.location.pathname.includes("preview") || window.location.pathname.includes("img")
     const isCloudflarePage = document.title.includes('Just a moment') ||
         document.querySelector('#challenge-running') !== null;
 
     if (!isInAnubis && !isCloudflarePage && !isInNormalPage && !isMediaPreviewPage) {
-        return document.body
+        return {
+            element: document.body,
+            pathname: window.location.pathname,
+            search: window.location.search
+        }
     }
-    return null
 
+    if (window.location.pathname.includes(".within.website")) {
+        const urlObj = new URL(window.location.toString());
+        const redir = urlObj.searchParams.get('redir');
+        if (!redir) return false
+        const decodedRedir = decodeURIComponent(redir);
+        const redirUrl = new URL(decodedRedir);
+        return {
+            element: document.body,
+            pathname: redirUrl.pathname,
+            search: redirUrl.search
+        }
+    }
+
+    return null
 }
 
 const checkForRedlibError = () => {
@@ -128,7 +145,14 @@ const checkForRedlibError = () => {
         message.includes("failed to parse page json data") ||
         message.includes("rate limit")
 
-    if (hasError) return errorElement
+    if (hasError) {
+        return {
+            element: errorElement,
+            pathname: window.location.pathname,
+            search: window.location.search
+        }
+    }
+
     return null
 }
 
@@ -140,17 +164,24 @@ const checkForNginxError = () => {
     const hasError = errorElement.innerHTML === "502 Bad Gateway" ||
         errorElement.innerHTML === "503 Service Temporarily Unavailable"
 
-    if (hasError) return errorElement
+    if (hasError) {
+        return {
+            element: errorElement,
+            pathname: window.location.pathname,
+            search: window.location.search
+        }
+    }
     return null
 }
 
 function main() {
-    const errorElement = checkForUnexpectedPage() ?? checkForNginxError() ?? checkForRedlibError()
-    if (errorElement) {
+    const errorInfo = checkForUnexpectedPage() ?? checkForNginxError() ?? checkForRedlibError()
+    if (errorInfo) {
+        const element = errorInfo.element
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
-        errorElement.appendChild(addedMessage)
-        location.replace('https://farside.link/redlib/' + window.location.pathname + window.location.search);
+        element.appendChild(addedMessage)
+        location.replace('https://farside.link/redlib/' + errorInfo.pathname + errorInfo.search);
     }
 }
 
