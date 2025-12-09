@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Nitter
 // @namespace    happyviking
-// @version      1.62.0
+// @version      1.63.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -11,8 +11,7 @@
 
 // <<INSTANCES START HERE>>
 // @match https://lightbrd.com/*
-// @match https://nitter.kareem.one/*
-// @match https://nitter.kuuro.net/*
+// @match https://nitter.catsarch.com/*
 // @match https://nitter.net/*
 // @match https://nitter.poast.org/*
 // @match https://nitter.privacyredirect.com/*
@@ -20,6 +19,8 @@
 // @match https://nitter.tiekoetter.com/*
 // @match https://nuku.trabun.org/*
 // @match https://xcancel.com/*
+// @match https://nitter.kareem.one/*
+// @match https://nitter.kuuro.net/*
 // @match https://nitter.privacydev.net/*
 // @match https://nitter.lucabased.xyz/*
 // <<INSTANCES END HERE>>
