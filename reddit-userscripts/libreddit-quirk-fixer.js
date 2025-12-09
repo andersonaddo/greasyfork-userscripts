@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Redlib Quirk Fixer
 // @namespace    happyviking
-// @version      1.28.0
+// @version      1.30.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -104,8 +104,16 @@
 
 // ==/UserScript==
 
-function tryNewInstance(suffix) {
-    location.replace('https://farside.link/redlib/' + (suffix ?? (window.location.pathname + window.location.search)));
+function generateNewInstanceURL() {
+    if (window.location.pathname.includes(".within.website")) {
+        const urlObj = new URL(window.location.toString());
+        const redir = urlObj.searchParams.get('redir');
+        if (!redir) return false
+        const decodedRedir = decodeURIComponent(redir);
+        const redirUrl = new URL(decodedRedir);
+        return 'https://farside.link/redlib/' + redirUrl.pathname + redirUrl.search
+    }
+    return 'https://farside.link/redlib/' + (window.location.pathname + window.location.search);
 }
 
 // ************************************************
@@ -161,7 +169,7 @@ function fixNSFWGate() {
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
         nsfwElement.appendChild(addedMessage)
-        tryNewInstance()
+        location.replace(generateNewInstanceURL());
     } else {
         setPreference("show_nsfw", "on")
     }
@@ -180,24 +188,24 @@ function fixNoHls() {
 
 // ************************************************
 
+// https://github.com/TecharoHQ/anubis
 function isInAnubis() {
     return !!document.getElementById("anubis_version")
 }
 
 function redirectIfStillInAnubis(timeout) {
     setTimeout(() => {
-        if (isInAnubis()) tryNewInstance()
+        if (isInAnubis()) location.replace(generateNewInstanceURL());
     }, timeout)
 }
 
-// https://github.com/TecharoHQ/anubis
 function fixBadAnubisCheck() {
-    if (["rl.blitzw.in"].includes(window.location.hostname)) {
-        redirectIfStillInAnubis(500)
-    } else {
-        redirectIfStillInAnubis(7000)
+    const specialCases = {
+        "rl.blitzw.in": 500,
+        "oratrice.ptr.moe": 2000
     }
-
+    const specialTimeout = specialCases[window.location.hostname]
+    redirectIfStillInAnubis(specialTimeout ?? 7000)
 }
 
 // ************************************************
@@ -211,8 +219,6 @@ fixNoHls()
 
 // More complicated Checks
 fixDefaultCommentOrder()
-
-
 
 if (shouldReloadWithNewPreferences) {
     // We might as well turn on HLS before we realize that it's not enabled and we 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Redlib
 // @namespace    happyviking
-// @version      1.58.0
+// @version      1.60.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -103,6 +103,18 @@
 
 // ==/UserScript==
 
+function generateNewInstanceURL() {
+    if (window.location.pathname.includes(".within.website")) {
+        const urlObj = new URL(window.location.toString());
+        const redir = urlObj.searchParams.get('redir');
+        if (!redir) return false
+        const decodedRedir = decodeURIComponent(redir);
+        const redirUrl = new URL(decodedRedir);
+        return 'https://farside.link/redlib/' + redirUrl.pathname + redirUrl.search
+    }
+    return 'https://farside.link/redlib/' + (window.location.pathname + window.location.search);
+}
+
 function isInAnubis() {
     return !!document.getElementById("anubis_version")
 }
@@ -124,7 +136,7 @@ function main() {
     parent.prepend(newButton)
     newButton.appendChild(document.createTextNode("New Instance"))
     newButton.onclick = () => {
-        location.replace('https://farside.link/redlib/' + window.location.pathname + window.location.search);
+        location.replace(generateNewInstanceURL());
     }
 
 }

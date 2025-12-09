@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Automatic Redlib Quota & Error Redirector
 // @namespace    happyviking
-// @version      1.69.0
+// @version      1.70.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -101,6 +101,19 @@
 
 // ==/UserScript==
 
+
+function generateNewInstanceURL() {
+    if (window.location.pathname.includes(".within.website")) {
+        const urlObj = new URL(window.location.toString());
+        const redir = urlObj.searchParams.get('redir');
+        if (!redir) return false
+        const decodedRedir = decodeURIComponent(redir);
+        const redirUrl = new URL(decodedRedir);
+        return 'https://farside.link/redlib/' + redirUrl.pathname + redirUrl.search
+    }
+    return 'https://farside.link/redlib/' + (window.location.pathname + window.location.search);
+}
+
 const checkForUnexpectedPage = () => {
     const isInNormalPage = !!document.querySelector('nav');
     const isInAnubis = !!document.getElementById("anubis_version")
@@ -120,12 +133,8 @@ const checkForUnexpectedPage = () => {
         const urlObj = new URL(window.location.toString());
         const redir = urlObj.searchParams.get('redir');
         if (!redir) return false
-        const decodedRedir = decodeURIComponent(redir);
-        const redirUrl = new URL(decodedRedir);
         return {
             element: document.body,
-            pathname: redirUrl.pathname,
-            search: redirUrl.search
         }
     }
 
@@ -148,42 +157,22 @@ const checkForRedlibError = () => {
     if (hasError) {
         return {
             element: errorElement,
-            pathname: window.location.pathname,
-            search: window.location.search
         }
     }
 
     return null
 }
 
-// Probably isn't needed because of checkForUnexpectedPage now
-const checkForNginxError = () => {
-    const errorElement = document.getElementsByTagName("h1").item(0)
-    if (!errorElement) return false
-
-    const hasError = errorElement.innerHTML === "502 Bad Gateway" ||
-        errorElement.innerHTML === "503 Service Temporarily Unavailable"
-
-    if (hasError) {
-        return {
-            element: errorElement,
-            pathname: window.location.pathname,
-            search: window.location.search
-        }
-    }
-    return null
-}
 
 function main() {
-    const errorInfo = checkForUnexpectedPage() ?? checkForNginxError() ?? checkForRedlibError()
+    const errorInfo = checkForUnexpectedPage() ?? checkForRedlibError()
     if (errorInfo) {
         const element = errorInfo.element
         const addedMessage = document.createElement("p")
         addedMessage.textContent = "Redirecting you to new instance..."
         element.appendChild(addedMessage)
-        location.replace('https://farside.link/redlib/' + errorInfo.pathname + errorInfo.search);
+        location.replace(generateNewInstanceURL());
     }
 }
 
 main()
-
