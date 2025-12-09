@@ -100,6 +100,7 @@
 // <<INSTANCES END HERE>>
 
 // @match https://geoblock.ste.company/restricted/*
+// @match https://oratrice.ptr.moe/*
 
 // ==/UserScript==
 

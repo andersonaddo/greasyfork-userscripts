@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Instance Button for Redlib
 // @namespace    happyviking
-// @version      1.57.0
+// @version      1.58.0
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -99,6 +99,7 @@
 // @match https://reddit.baby/*
 // <<INSTANCES END HERE>>
 
+// @match https://oratrice.ptr.moe/*
 
 // ==/UserScript==
 
