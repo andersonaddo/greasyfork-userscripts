@@ -23,7 +23,7 @@ jobs:
         run: cd ./_utils_ && npm install
 
       - name: Run metadata update script
-        run: cd ./_utils_ && npx ts-node userscript-metadata-updater.ts
+        run: cd ./_utils_ && npx tsx userscript-metadata-updater.ts
 
       - name: Commit and push changes
         if: ${{ env.SHOULD_COMMIT == 'YES' }}
